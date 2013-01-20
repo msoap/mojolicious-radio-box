@@ -94,8 +94,16 @@ __DATA__
   <title>Mojolicious radio box</title>
   <script src="/js/jquery.js"></script>
   <script src="script.js"></script>
+  <style>
+      h1 {
+          font-size: 80%;
+      }
+  </style>
 </head>
 <body>
+    <h1>♫♬Mojolicious radio box</h1>
+    <button id="bt_pause">pause</button>
+    <div id="div_info"></div>
 </body>
 </html>
 
@@ -107,10 +115,19 @@ __DATA__
 
   window.App = {
     init: function() {
-      return console.log("init");
+      console.log("init");
+      return $("#bt_pause").on('click', App.do_pause);
+    },
+    do_pause: function() {
+      console.log("pause");
+      return $.get('/pause', function() {
+        return console.log('pause ok');
+      });
     }
   };
 
-  App.init();
+  $(function() {
+    return App.init();
+  });
 
 }).call(this);
