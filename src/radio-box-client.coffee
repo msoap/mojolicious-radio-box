@@ -9,6 +9,7 @@ window.App =
         console.log "init"
         $("#bt_pause").on('click', App.do_pause)
         $("#bt_next").on('click', App.do_next)
+        $("#bt_prev").on('click', App.do_prev)
         App.update_info()
 
     update_info: ->
@@ -31,6 +32,12 @@ window.App =
         console.log "next"
         $.get '/next', () ->
             console.log('next ok')
+            App.update_info()
+
+    do_prev: ->
+        console.log "prev"
+        $.get '/prev', () ->
+            console.log('prev ok')
             App.update_info()
 
 # .............................................................................

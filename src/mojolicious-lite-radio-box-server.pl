@@ -31,6 +31,12 @@ any '/next'  => sub {
     return $self->render_json({status => 'ok'});
 };
 
+any '/prev'  => sub {
+    my $self = shift;
+    cmus_prev();
+    return $self->render_json({status => 'ok'});
+};
+
 app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);
 
 __DATA__
@@ -49,6 +55,7 @@ __DATA__
 </head>
 <body>
     <h1>♫♬Mojolicious radio box</h1>
+    <button id="bt_prev">pause</button>
     <button id="bt_pause">pause</button>
     <button id="bt_next">next</button>
     <div id="div_info"></div>

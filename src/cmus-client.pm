@@ -70,3 +70,15 @@ do next song
 sub cmus_next {
     system('cmus-remote', '--next');
 }
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_prev
+
+do prev song
+
+=cut
+
+sub cmus_prev {
+    system('cmus-remote', '--prev');
+}
