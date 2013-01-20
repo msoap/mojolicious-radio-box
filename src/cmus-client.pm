@@ -31,3 +31,29 @@ sub cmus_get_info {
 
     return $result;
 }
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_pause
+
+Pause/unpause player
+
+    cmus_pause()  # toggle
+    cmus_pause(1) # pause
+    cmus_pause(0) # unpause
+
+=cut
+
+sub cmus_pause {
+    my $what = shift;
+
+    if (! defined $what) {
+        system('cmus-remote', '--pause');
+    } elsif ($what) {
+        my $info = cmus_get_info() || {};
+        system('cmus-remote', '--pause') if $info->{status} eq 'playing';
+    } elsif (! $what) {
+        my $info = cmus_get_info() || {};
+        system('cmus-remote', '--pause') if $info->{status} eq 'paused';
+    }
+}

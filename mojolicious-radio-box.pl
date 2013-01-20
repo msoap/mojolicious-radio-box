@@ -8,6 +8,7 @@ use utf8;
 use Mojolicious::Lite;
 use Data::Dumper;
 
+# ------------------------------------------------------------------------------
 =head1 cmus player client
 
     http://cmus.sourceforge.net
@@ -42,12 +43,44 @@ sub cmus_get_info {
     return $result;
 }
 
+# ------------------------------------------------------------------------------
+
+=head1 cmus_pause
+
+Pause/unpause player
+
+    cmus_pause()  # toggle
+    cmus_pause(1) # pause
+    cmus_pause(0) # unpause
+
+=cut
+
+sub cmus_pause {
+    my $what = shift;
+
+    if (! defined $what) {
+        system('cmus-remote', '--pause');
+    } elsif ($what) {
+        my $info = cmus_get_info() || {};
+        system('cmus-remote', '--pause') if $info->{status} eq 'playing';
+    } elsif (! $what) {
+        my $info = cmus_get_info() || {};
+        system('cmus-remote', '--pause') if $info->{status} eq 'paused';
+    }
+}
+
 # mojolicious routers ----------------------------------------------------------
 get '/' => 'index';
 
 get '/get_info'  => sub {
     my $self = shift;
-    return $self->render_json(cmus_get_info());
+    return $self->render_json({status => 'ok', result => cmus_get_info()});
+};
+
+any '/pause'  => sub {
+    my $self = shift;
+    cmus_pause();
+    return $self->render_json({status => 'ok'});
 };
 
 app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);

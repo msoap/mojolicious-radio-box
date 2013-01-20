@@ -8,6 +8,7 @@ use utf8;
 use Mojolicious::Lite;
 use Data::Dumper;
 
+# ------------------------------------------------------------------------------
 #<<< src/cmus-client.pm
 
 # mojolicious routers ----------------------------------------------------------
@@ -15,7 +16,13 @@ get '/' => 'index';
 
 get '/get_info'  => sub {
     my $self = shift;
-    return $self->render_json(cmus_get_info());
+    return $self->render_json({status => 'ok', result => cmus_get_info()});
+};
+
+any '/pause'  => sub {
+    my $self = shift;
+    cmus_pause();
+    return $self->render_json({status => 'ok'});
 };
 
 app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);
