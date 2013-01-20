@@ -41,26 +41,7 @@ app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--liste
 
 __DATA__
 @@ index.html.ep
-<!doctype html>
-<head>
-  <meta charset="utf-8">
-  <title>Mojolicious radio box</title>
-  <script src="/js/jquery.js"></script>
-  <script src="script.js"></script>
-  <style>
-      h1 {
-          font-size: 80%;
-      }
-  </style>
-</head>
-<body>
-    <h1>♫♬Mojolicious radio box</h1>
-    <button id="bt_prev">pause</button>
-    <button id="bt_pause">pause</button>
-    <button id="bt_next">next</button>
-    <div id="div_info"></div>
-</body>
-</html>
+#<<< src/index.html
 
 @@ not_found.html.ep
 <h1>404</h1>
