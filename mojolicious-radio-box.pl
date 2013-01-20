@@ -114,9 +114,24 @@ __DATA__
 (function() {
 
   window.App = {
+    info: {
+      status: "-",
+      position: 0,
+      duration: 0
+    },
     init: function() {
       console.log("init");
-      return $("#bt_pause").on('click', App.do_pause);
+      $("#bt_pause").on('click', App.do_pause);
+      return App.update_info();
+    },
+    update_info: function() {
+      return $.get('/get_info', function(info_data) {
+        App.info = info_data.result;
+        return App.render_info();
+      });
+    },
+    render_info: function() {
+      return $("#div_info").html("Artist: " + App.info.tag.artist + "<br>\nalbum: " + App.info.tag.album + "<br>\n<b>" + App.info.tag.title + "</b><br>");
     },
     do_pause: function() {
       console.log("pause");
