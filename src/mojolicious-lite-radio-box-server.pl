@@ -33,6 +33,7 @@ __DATA__
 <head>
   <meta charset="utf-8">
   <title>Mojolicious radio box</title>
+  <script src="/js/jquery.js"></script>
   <script src="script.js"></script>
 </head>
 <body>

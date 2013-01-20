@@ -34,6 +34,7 @@ sub cmus_get_info {
         my ($name, $value) = split /\s+/, $line, 2;
         if ($name =~ /^(tag|set)$/) {
             my ($sub_name, $value) = split /\s+/, $value, 2;
+            $value = $value =~ /^(true|false)$/ ? {true => 1, false => 0}->{$value} : $value;
             $result->{$name}->{$sub_name} = $value;
         } else {
             $result->{$name} = $value;
@@ -91,6 +92,7 @@ __DATA__
 <head>
   <meta charset="utf-8">
   <title>Mojolicious radio box</title>
+  <script src="/js/jquery.js"></script>
   <script src="script.js"></script>
 </head>
 <body>
