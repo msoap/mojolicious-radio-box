@@ -13,6 +13,11 @@ use Data::Dumper;
 # mojolicious routers ----------------------------------------------------------
 get '/' => 'index';
 
+get '/get_info'  => sub {
+    my $self = shift;
+    return $self->render_json(cmus_get_info());
+};
+
 app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);
 
 __DATA__
