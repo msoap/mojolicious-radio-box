@@ -8,6 +8,7 @@ window.App =
     init: ->
         console.log "init"
         $("#bt_pause").on('click', App.do_pause)
+        $("#bt_next").on('click', App.do_next)
         App.update_info()
 
     update_info: ->
@@ -25,6 +26,12 @@ window.App =
     do_pause: ->
         console.log "pause"
         $.get '/pause', () -> console.log('pause ok')
+
+    do_next: ->
+        console.log "next"
+        $.get '/next', () ->
+            console.log('next ok')
+            App.update_info()
 
 # .............................................................................
 $ () -> App.init()

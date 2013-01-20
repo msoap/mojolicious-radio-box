@@ -58,3 +58,15 @@ sub cmus_pause {
         system('cmus-remote', '--pause') if $info->{status} eq 'paused';
     }
 }
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_next
+
+do next song
+
+=cut
+
+sub cmus_next {
+    system('cmus-remote', '--next');
+}

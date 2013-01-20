@@ -70,6 +70,18 @@ sub cmus_pause {
     }
 }
 
+# ------------------------------------------------------------------------------
+
+=head1 cmus_next
+
+do next song
+
+=cut
+
+sub cmus_next {
+    system('cmus-remote', '--next');
+}
+
 # mojolicious routers ----------------------------------------------------------
 get '/' => 'index';
 
@@ -81,6 +93,12 @@ get '/get_info'  => sub {
 any '/pause'  => sub {
     my $self = shift;
     cmus_pause();
+    return $self->render_json({status => 'ok'});
+};
+
+any '/next'  => sub {
+    my $self = shift;
+    cmus_next();
     return $self->render_json({status => 'ok'});
 };
 
@@ -103,6 +121,7 @@ __DATA__
 <body>
     <h1>♫♬Mojolicious radio box</h1>
     <button id="bt_pause">pause</button>
+    <button id="bt_next">next</button>
     <div id="div_info"></div>
 </body>
 </html>
@@ -122,6 +141,7 @@ __DATA__
     init: function() {
       console.log("init");
       $("#bt_pause").on('click', App.do_pause);
+      $("#bt_next").on('click', App.do_next);
       return App.update_info();
     },
     update_info: function() {
@@ -137,6 +157,13 @@ __DATA__
       console.log("pause");
       return $.get('/pause', function() {
         return console.log('pause ok');
+      });
+    },
+    do_next: function() {
+      console.log("next");
+      return $.get('/next', function() {
+        console.log('next ok');
+        return App.update_info();
       });
     }
   };
