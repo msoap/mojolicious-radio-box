@@ -140,7 +140,7 @@ __DATA__
 </head>
 <body>
     <h1>♫♬Mojolicious radio box</h1>
-    <button id="bt_prev">pause</button>
+    <button id="bt_prev">prev</button>
     <button id="bt_pause">pause</button>
     <button id="bt_next">next</button>
     <div id="div_info"></div>
