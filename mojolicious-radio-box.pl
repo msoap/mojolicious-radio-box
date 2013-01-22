@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use utf8;
+use open qw/:std :utf8/;
 
 use Mojolicious::Lite;
 use Data::Dumper;
@@ -14,8 +15,6 @@ use Data::Dumper;
     http://cmus.sourceforge.net
 
 =cut
-
-use open qw/:std :utf8/;
 
 # ------------------------------------------------------------------------------
 

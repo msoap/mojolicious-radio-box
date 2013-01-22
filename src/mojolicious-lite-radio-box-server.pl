@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use utf8;
+use open qw/:std :utf8/;
 
 use Mojolicious::Lite;
 use Data::Dumper;
