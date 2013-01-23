@@ -18,15 +18,21 @@ window.App =
             App.render_info()
 
     render_info: ->
+        if App.info.status == 'playing'
+            $("span#pause_icon").html("&#9724;")
+        else if App.info.status == 'paused'
+            $("#pause_icon").html("&#9658;")
+
         $("#div_info").html """
-            Artist: #{App.info.tag.artist}<br>
-            album: #{App.info.tag.album}<br>
+            #{App.info.tag.artist}<br>
+            <i>#{App.info.tag.album}</i><br>
             <b>#{App.info.tag.title}</b><br>
         """
 
     do_pause: ->
         console.log "pause"
         $.get '/pause', () -> console.log('pause ok')
+        App.update_info()
 
     do_next: ->
         console.log "next"

@@ -135,12 +135,16 @@ __DATA__
       h1 {
           font-size: 80%;
       }
+      #div_info {
+          font-family: "Arial Narrow", sans-serif;
+          font-size: 90%;
+      }
   </style>
 </head>
 <body>
     <h1>♫♬ Mojolicious radio box</h1>
     <button id="bt_prev">⌫ prev</button>
-    <button id="bt_pause">◼/❙❙ pause</button>
+    <button id="bt_pause"><span id="pause_icon"></span> pause</button>
     <button id="bt_next">next ⌦</button>
     <div id="div_info"></div>
 </body>
@@ -172,13 +176,19 @@ __DATA__
       });
     },
     render_info: function() {
-      return $("#div_info").html("Artist: " + App.info.tag.artist + "<br>\nalbum: " + App.info.tag.album + "<br>\n<b>" + App.info.tag.title + "</b><br>");
+      if (App.info.status === 'playing') {
+        $("span#pause_icon").html("&#9724;");
+      } else if (App.info.status === 'paused') {
+        $("#pause_icon").html("&#9658;");
+      }
+      return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
     },
     do_pause: function() {
       console.log("pause");
-      return $.get('/pause', function() {
+      $.get('/pause', function() {
         return console.log('pause ok');
       });
+      return App.update_info();
     },
     do_next: function() {
       console.log("next");
