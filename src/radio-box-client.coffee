@@ -31,8 +31,9 @@ window.App =
 
     do_pause: ->
         console.log "pause"
-        $.get '/pause', () -> console.log('pause ok')
-        App.update_info()
+        $.get '/pause', () ->
+            console.log('pause ok')
+            App.update_info()
 
     do_next: ->
         console.log "next"

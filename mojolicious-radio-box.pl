@@ -185,10 +185,10 @@ __DATA__
     },
     do_pause: function() {
       console.log("pause");
-      $.get('/pause', function() {
-        return console.log('pause ok');
+      return $.get('/pause', function() {
+        console.log('pause ok');
+        return App.update_info();
       });
-      return App.update_info();
     },
     do_next: function() {
       console.log("next");
