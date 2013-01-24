@@ -9,6 +9,10 @@ window.App =
         $("#bt_pause").on('click', App.do_pause)
         $("#bt_next").on('click', App.do_next)
         $("#bt_prev").on('click', App.do_prev)
+        $(document).ajaxError () ->
+            $("#div_error").css
+                display: 'block'
+            .fadeOut 1500
         App.update_info()
 
     update_info: ->
@@ -22,11 +26,12 @@ window.App =
         else if App.info.status == 'paused'
             $("#bt_pause").html("&#9658; play")
 
-        $("#div_info").html """
-            #{App.info.tag.artist}<br>
-            <i>#{App.info.tag.album}</i><br>
-            <b>#{App.info.tag.title}</b><br>
-        """
+        if App.info.tag
+            $("#div_info").html """
+                #{App.info.tag.artist}<br>
+                <i>#{App.info.tag.album}</i><br>
+                <b>#{App.info.tag.title}</b><br>
+            """
 
     do_pause: ->
         $.get '/pause', (info_data) ->

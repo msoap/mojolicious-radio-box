@@ -141,6 +141,12 @@ __DATA__
           font-family: "Arial Narrow", sans-serif;
           font-size: 90%;
       }
+      #div_error {
+          color: red;
+          display: none;
+          font-family: sans-serif;
+          margin-top: 10px;
+      }
   </style>
 </head>
 <body>
@@ -149,6 +155,7 @@ __DATA__
     <button id="bt_pause"> pause</button>
     <button id="bt_next">next ⌦</button>
     <div id="div_info"></div>
+    <div id="div_error">Server unavailable...</div>
 </body>
 </html>
 
@@ -168,6 +175,11 @@ __DATA__
       $("#bt_pause").on('click', App.do_pause);
       $("#bt_next").on('click', App.do_next);
       $("#bt_prev").on('click', App.do_prev);
+      $(document).ajaxError(function() {
+        return $("#div_error").css({
+          display: 'block'
+        }).fadeOut(1500);
+      });
       return App.update_info();
     },
     update_info: function() {
@@ -182,7 +194,9 @@ __DATA__
       } else if (App.info.status === 'paused') {
         $("#bt_pause").html("&#9658; play");
       }
-      return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
+      if (App.info.tag) {
+        return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
+      }
     },
     do_pause: function() {
       return $.get('/pause', function(info_data) {
