@@ -6,7 +6,6 @@ window.App =
         duration: 0
 
     init: ->
-        console.log "init"
         $("#bt_pause").on('click', App.do_pause)
         $("#bt_next").on('click', App.do_next)
         $("#bt_prev").on('click', App.do_prev)
@@ -14,7 +13,7 @@ window.App =
 
     update_info: ->
         $.get '/get_info', (info_data) ->
-            App.info = info_data.result
+            App.info = info_data.info
             App.render_info()
 
     render_info: ->
@@ -31,21 +30,21 @@ window.App =
 
     do_pause: ->
         console.log "pause"
-        $.get '/pause', () ->
-            console.log('pause ok')
-            App.update_info()
+        $.get '/pause', (info_data) ->
+            App.info = info_data.info
+            App.render_info()
 
     do_next: ->
         console.log "next"
-        $.get '/next', () ->
-            console.log('next ok')
-            App.update_info()
+        $.get '/next', (info_data) ->
+            App.info = info_data.info
+            App.render_info()
 
     do_prev: ->
         console.log "prev"
-        $.get '/prev', () ->
-            console.log('prev ok')
-            App.update_info()
+        $.get '/prev', (info_data) ->
+            App.info = info_data.info
+            App.render_info()
 
 # .............................................................................
 $ () -> App.init()

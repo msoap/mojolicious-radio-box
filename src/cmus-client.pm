@@ -12,25 +12,12 @@ Get info from cmus player
 
 testing:
     perl -ME -E 'do "src/cmus-client.pm"; p cmus_get_info()'
+    curl -s 'http://localhost:8080/get_info' | perl -ME -E 'p from_json(<STDIN>)'
 
 =cut
 
 sub cmus_get_info {
-    my $result = {};
-
-    for my $line (`cmus-remote -Q`) {
-        chomp $line;
-        my ($name, $value) = split /\s+/, $line, 2;
-        if ($name =~ /^(tag|set)$/) {
-            my ($sub_name, $value) = split /\s+/, $value, 2;
-            $value = $value =~ /^(true|false)$/ ? {true => 1, false => 0}->{$value} : $value;
-            $result->{$name}->{$sub_name} = $value;
-        } else {
-            $result->{$name} = $value;
-        }
-    }
-
-    return $result;
+    return _cmus_parse_info(`cmus-remote -Q`);
 }
 
 # ------------------------------------------------------------------------------
@@ -46,17 +33,7 @@ Pause/unpause player
 =cut
 
 sub cmus_pause {
-    my $what = shift;
-
-    if (! defined $what) {
-        system('cmus-remote', '--pause');
-    } elsif ($what) {
-        my $info = cmus_get_info() || {};
-        system('cmus-remote', '--pause') if $info->{status} eq 'playing';
-    } elsif (! $what) {
-        my $info = cmus_get_info() || {};
-        system('cmus-remote', '--pause') if $info->{status} eq 'paused';
-    }
+    return _cmus_parse_info(`echo "player-pause\nstatus" | cmus-remote`);
 }
 
 # ------------------------------------------------------------------------------
@@ -68,7 +45,7 @@ do next song
 =cut
 
 sub cmus_next {
-    system('cmus-remote', '--next');
+    return _cmus_parse_info(`echo "player-next\nstatus" | cmus-remote`);
 }
 
 # ------------------------------------------------------------------------------
@@ -81,4 +58,33 @@ do prev song
 
 sub cmus_prev {
     system('cmus-remote', '--prev');
+    return _cmus_parse_info(`echo "player-prev\nstatus" | cmus-remote`);
+}
+
+# ------------------------------------------------------------------------------
+
+=head1 _cmus_parse_info
+
+Parse lines from cmus-remote -Q
+
+=cut
+
+sub _cmus_parse_info {
+    my @info_lines = @_;
+
+    my $result = {};
+
+    for my $line (@info_lines) {
+        chomp $line;
+        my ($name, $value) = split /\s+/, $line, 2;
+        if ($name =~ /^(tag|set)$/) {
+            my ($sub_name, $value) = split /\s+/, $value, 2;
+            $value = $value =~ /^(true|false)$/ ? {true => 1, false => 0}->{$value} : $value;
+            $result->{$name}->{$sub_name} = $value;
+        } else {
+            $result->{$name} = $value;
+        }
+    }
+
+    return $result;
 }
