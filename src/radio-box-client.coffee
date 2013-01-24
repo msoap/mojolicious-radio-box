@@ -29,19 +29,16 @@ window.App =
         """
 
     do_pause: ->
-        console.log "pause"
         $.get '/pause', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     do_next: ->
-        console.log "next"
         $.get '/next', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     do_prev: ->
-        console.log "prev"
         $.get '/prev', (info_data) ->
             App.info = info_data.info
             App.render_info()

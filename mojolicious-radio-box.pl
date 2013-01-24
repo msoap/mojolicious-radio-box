@@ -185,21 +185,18 @@ __DATA__
       return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
     },
     do_pause: function() {
-      console.log("pause");
       return $.get('/pause', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_next: function() {
-      console.log("next");
       return $.get('/next', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_prev: function() {
-      console.log("prev");
       return $.get('/prev', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
