@@ -57,7 +57,6 @@ do prev song
 =cut
 
 sub cmus_prev {
-    system('cmus-remote', '--prev');
     return _cmus_parse_info(`echo "player-prev\nstatus" | cmus-remote`);
 }
 
