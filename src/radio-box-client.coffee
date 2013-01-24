@@ -19,9 +19,9 @@ window.App =
 
     render_info: ->
         if App.info.status == 'playing'
-            $("span#pause_icon").html("&#9724;")
+            $("#bt_pause").html("&#9724; pause")
         else if App.info.status == 'paused'
-            $("#pause_icon").html("&#9658;")
+            $("#bt_pause").html("&#9658; play")
 
         $("#div_info").html """
             #{App.info.tag.artist}<br>

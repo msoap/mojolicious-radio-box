@@ -144,7 +144,7 @@ __DATA__
 <body>
     <h1>♫♬ Mojolicious radio box</h1>
     <button id="bt_prev">⌫ prev</button>
-    <button id="bt_pause"><span id="pause_icon"></span> pause</button>
+    <button id="bt_pause"> pause</button>
     <button id="bt_next">next ⌦</button>
     <div id="div_info"></div>
 </body>
@@ -177,9 +177,9 @@ __DATA__
     },
     render_info: function() {
       if (App.info.status === 'playing') {
-        $("span#pause_icon").html("&#9724;");
+        $("#bt_pause").html("&#9724; pause");
       } else if (App.info.status === 'paused') {
-        $("#pause_icon").html("&#9658;");
+        $("#bt_pause").html("&#9658; play");
       }
       return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
     },
