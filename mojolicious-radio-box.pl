@@ -75,10 +75,6 @@ sub cmus_get_info {
 
 Pause/unpause player
 
-    cmus_pause()  # toggle
-    cmus_pause(1) # pause
-    cmus_pause(0) # unpause
-
 =cut
 
 sub cmus_pause {
