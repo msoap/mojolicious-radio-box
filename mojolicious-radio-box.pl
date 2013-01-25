@@ -9,6 +9,27 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use Data::Dumper;
 
+our %OPTIONS = (
+    ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
+);
+
+# ------------------------------------------------------------------------------
+# util functions
+# ------------------------------------------------------------------------------
+sub init {
+    if (-r $OPTIONS{ini_file}) {
+        open my $FH, '<', $OPTIONS{ini_file} or die "Error open file: $!\n";
+        while (my $line = <$FH>) {
+            chomp $line;
+            next if $line =~ m/^ \s* \# .* $/x;
+            my ($key, $value) = split /\s*=\s*/, $line, 2;
+            $OPTIONS{$key} = $value;
+        }
+        close $FH;
+        $OPTIONS{radio_playlist_dir} =~ s/^~/$ENV{HOME}/ if defined $OPTIONS{radio_playlist_dir};
+    }
+}
+
 # ------------------------------------------------------------------------------
 =head1 cmus player client
 
@@ -123,7 +144,11 @@ any '/prev'  => sub {
     return $self->render_json({status => 'ok', info => cmus_prev()});
 };
 
-app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);
+# go ---------------------------------------------------------------------------
+init();
+app
+    ->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')
+    ->start('daemon', '--listen=http://*:8080', @ARGV);
 
 __DATA__
 @@ index.html.ep

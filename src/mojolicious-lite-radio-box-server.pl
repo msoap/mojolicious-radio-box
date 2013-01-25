@@ -9,13 +9,24 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use Data::Dumper;
 
+our %OPTIONS = (
+    ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
+);
+
+# ------------------------------------------------------------------------------
+#<<< src/util.pm
+
 # ------------------------------------------------------------------------------
 #<<< src/cmus-client.pm
 
 # mojolicious routers ----------------------------------------------------------
 #<<< src/routers.pm
 
-app->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')->start('daemon', '--listen=http://*:8080', @ARGV);
+# go ---------------------------------------------------------------------------
+init();
+app
+    ->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')
+    ->start('daemon', '--listen=http://*:8080', @ARGV);
 
 __DATA__
 @@ index.html.ep
