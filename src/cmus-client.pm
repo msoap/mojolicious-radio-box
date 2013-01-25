@@ -17,7 +17,7 @@ testing:
 =cut
 
 sub cmus_get_info {
-    return _cmus_parse_info(`cmus-remote -Q`);
+    return _cmus_parse_info(`cmus-remote --query`);
 }
 
 # ------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ Pause/unpause player
 =cut
 
 sub cmus_pause {
-    return _cmus_parse_info(`echo "player-pause\nstatus" | cmus-remote`);
+    return _cmus_parse_info(`cmus-remote --pause --query`);
 }
 
 # ------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ do next song
 =cut
 
 sub cmus_next {
-    return _cmus_parse_info(`echo "player-next\nstatus" | cmus-remote`);
+    return _cmus_parse_info(`cmus-remote --next --query`);
 }
 
 # ------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ do prev song
 =cut
 
 sub cmus_prev {
-    return _cmus_parse_info(`echo "player-prev\nstatus" | cmus-remote`);
+    return _cmus_parse_info(`cmus-remote --prev --query`);
 }
 
 # ------------------------------------------------------------------------------
