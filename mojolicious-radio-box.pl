@@ -217,7 +217,8 @@ __DATA__
           display: 'block'
         }).fadeOut(1500);
       });
-      return App.update_info();
+      App.update_info();
+      return window.setInterval(App.update_info, 15 * 1000);
     },
     update_info: function() {
       return $.get('/get_info', function(info_data) {

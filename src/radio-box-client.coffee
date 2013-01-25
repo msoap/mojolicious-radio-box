@@ -14,6 +14,7 @@ window.App =
                 display: 'block'
             .fadeOut 1500
         App.update_info()
+        window.setInterval App.update_info, 15 * 1000
 
     update_info: ->
         $.get '/get_info', (info_data) ->
