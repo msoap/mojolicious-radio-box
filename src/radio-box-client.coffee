@@ -27,11 +27,17 @@ window.App =
             $("#bt_pause").html("&#9658; play")
 
         if App.info.tag
-            $("#div_info").html """
-                #{App.info.tag.artist}<br>
-                <i>#{App.info.tag.album}</i><br>
-                <b>#{App.info.tag.title}</b><br>
-            """
+            if App.info.radio_title
+                $("#div_info").html """
+                    #{App.info.tag.title}<br>
+                    <b>#{App.info.radio_title}</b><br>
+                """
+            else
+                $("#div_info").html """
+                    #{App.info.tag.artist}<br>
+                    <i>#{App.info.tag.album}</i><br>
+                    <b>#{App.info.tag.title}</b><br>
+                """
 
     do_pause: ->
         $.get '/pause', (info_data) ->

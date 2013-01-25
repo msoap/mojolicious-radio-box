@@ -7,10 +7,12 @@ use utf8;
 use open qw/:std :utf8/;
 
 use Mojolicious::Lite;
+use JSON;
 use Data::Dumper;
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
+    last_track_file => "$ENV{HOME}/.cmus/last_track.txt",
 );
 
 # ------------------------------------------------------------------------------
@@ -50,7 +52,21 @@ testing:
 =cut
 
 sub cmus_get_info {
-    return _cmus_parse_info(`cmus-remote --query`);
+    my $info = _cmus_parse_info(`cmus-remote --query`);
+
+    # for internet-radio get title from file
+    if ($info->{status} eq 'playing'
+        && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
+        && -r $OPTIONS{last_track_file}
+       )
+    {
+        open my $FH, '<', $OPTIONS{last_track_file} or die "Error open file: $!\n";
+        my $add_info = eval{from_json(join("", <$FH>))} || {};
+        $info->{radio_title} = $add_info->{title} if $add_info->{title};
+        close $FH;
+    }
+
+    return $info;
 }
 
 # ------------------------------------------------------------------------------
@@ -220,7 +236,11 @@ __DATA__
         $("#bt_pause").html("&#9658; play");
       }
       if (App.info.tag) {
-        return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
+        if (App.info.radio_title) {
+          return $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b><br>");
+        } else {
+          return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
+        }
       }
     },
     do_pause: function() {

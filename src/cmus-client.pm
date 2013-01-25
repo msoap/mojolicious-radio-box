@@ -17,7 +17,21 @@ testing:
 =cut
 
 sub cmus_get_info {
-    return _cmus_parse_info(`cmus-remote --query`);
+    my $info = _cmus_parse_info(`cmus-remote --query`);
+
+    # for internet-radio get title from file
+    if ($info->{status} eq 'playing'
+        && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
+        && -r $OPTIONS{last_track_file}
+       )
+    {
+        open my $FH, '<', $OPTIONS{last_track_file} or die "Error open file: $!\n";
+        my $add_info = eval{from_json(join("", <$FH>))} || {};
+        $info->{radio_title} = $add_info->{title} if $add_info->{title};
+        close $FH;
+    }
+
+    return $info;
 }
 
 # ------------------------------------------------------------------------------
