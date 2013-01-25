@@ -10,6 +10,16 @@ any '/pause'  => sub {
     return $self->render_json({status => 'ok', info => cmus_pause()});
 };
 
+any '/play'  => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_play()});
+};
+
+any '/stop'  => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_stop()});
+};
+
 any '/next'  => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_next()});

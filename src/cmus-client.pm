@@ -48,6 +48,30 @@ sub cmus_pause {
 
 # ------------------------------------------------------------------------------
 
+=head1 cmus_play
+
+Play player
+
+=cut
+
+sub cmus_play {
+    return _cmus_parse_info(`cmus-remote --play --query`);
+}
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_stop
+
+Stop player
+
+=cut
+
+sub cmus_stop {
+    return _cmus_parse_info(`cmus-remote --stop --query`);
+}
+
+# ------------------------------------------------------------------------------
+
 =head1 cmus_next
 
 do next song

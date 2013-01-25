@@ -83,6 +83,30 @@ sub cmus_pause {
 
 # ------------------------------------------------------------------------------
 
+=head1 cmus_play
+
+Play player
+
+=cut
+
+sub cmus_play {
+    return _cmus_parse_info(`cmus-remote --play --query`);
+}
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_stop
+
+Stop player
+
+=cut
+
+sub cmus_stop {
+    return _cmus_parse_info(`cmus-remote --stop --query`);
+}
+
+# ------------------------------------------------------------------------------
+
 =head1 cmus_next
 
 do next song
@@ -144,6 +168,16 @@ get '/get_info'  => sub {
 any '/pause'  => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_pause()});
+};
+
+any '/play'  => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_play()});
+};
+
+any '/stop'  => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_stop()});
 };
 
 any '/next'  => sub {
@@ -229,22 +263,36 @@ __DATA__
     render_info: function() {
       if (App.info.status === 'playing') {
         $("#bt_pause").html("&#9724; pause");
-      } else if (App.info.status === 'paused') {
+      } else if (App.info.status === 'paused' || App.info.status === 'stopped') {
         $("#bt_pause").html("&#9658; play");
       }
       if (App.info.tag) {
         if (App.info.radio_title) {
-          return $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b><br>");
+          return $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b>");
+        } else if (App.info.tag.artist && App.info.tag.album) {
+          return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b>");
         } else {
-          return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b><br>");
+          return $("#div_info").html("<b>" + App.info.tag.title + "</b>");
         }
       }
     },
     do_pause: function() {
-      return $.get('/pause', function(info_data) {
-        App.info = info_data.info;
-        return App.render_info();
-      });
+      if (App.info.duration > 0 && !App.info.radio_title) {
+        return $.get('/pause', function(info_data) {
+          App.info = info_data.info;
+          return App.render_info();
+        });
+      } else if (App.info.status === 'playing') {
+        return $.get('/stop', function(info_data) {
+          App.info = info_data.info;
+          return App.render_info();
+        });
+      } else if (App.info.status === 'stopped') {
+        return $.get('/play', function(info_data) {
+          App.info = info_data.info;
+          return App.render_info();
+        });
+      }
     },
     do_next: function() {
       return $.get('/next', function(info_data) {
