@@ -167,7 +167,7 @@ sub cmus_play_radio {
     my $url = shift;
 
     if ($url) {
-        open my $FH, '|-', 'cmus-remote --queue' or die "Error open file: $!\n";
+        open my $FH, '|-', 'cmus-remote' or die "Error open file: $!\n";
         print $FH join("\n", 'clear'
                            , 'player-stop'
                            , "add $url"
