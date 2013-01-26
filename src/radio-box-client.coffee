@@ -21,7 +21,9 @@ window.App =
                 $("button.nav_buttons").removeAttr('disabled')
 
         App.update_info()
-        window.setInterval App.update_info, 15 * 1000
+
+        # update info every 15 seconds (not on dashboard)
+        window.setInterval App.update_info, 15 * 1000 if ! navigator.userAgent.match(/WebClip/)
 
     # ...........................................
     update_info: ->

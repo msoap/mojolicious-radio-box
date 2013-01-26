@@ -342,7 +342,9 @@ __DATA__
         });
       });
       App.update_info();
-      return window.setInterval(App.update_info, 15 * 1000);
+      if (!navigator.userAgent.match(/WebClip/)) {
+        return window.setInterval(App.update_info, 15 * 1000);
+      }
     },
     update_info: function() {
       return $.get('/get_info', function(info_data) {
