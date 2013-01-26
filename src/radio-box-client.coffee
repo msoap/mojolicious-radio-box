@@ -56,6 +56,25 @@ window.App =
                     <b>#{App.info.tag.title}</b>
                 """
 
+        if App.info.radio_title && App.info.file.match(/http:\/\//)
+            $("#radio_stations").show()
+            if App.radio_stations.length
+                App.render_select_radio()
+            else
+                App.do_get_radio()
+
+    # ...........................................
+    render_select_radio: ->
+        select_input = $('#radio_stations')[0]
+        select_input.options.length = 0
+
+        select_input.options.add(new Option(' - please select station -', ''))
+        for item in App.radio_stations
+            new_option = new Option(item.title, item.url)
+            if App.info.radio_title && App.info.file.match(/http:\/\//) && App.info.file == item.url
+                new_option.selected = true
+            select_input.options.add(new_option)
+        
     # ...........................................
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
@@ -88,15 +107,10 @@ window.App =
 
     # ...........................................
     do_get_radio: ->
-        $("#radio_stations").show()
         $.get '/get_radio', (result) ->
+            $("#radio_stations").show()
             App.radio_stations = result.radio_stations;
-            select_input = $('#radio_stations')[0]
-            select_input.options.length = 0
-
-            select_input.options.add(new Option(' - please select station -', ''))
-            for item in App.radio_stations
-                select_input.options.add(new Option(item.title, item.url))
+            App.render_select_radio()
 
     # ...........................................
     do_select_radio: (event) ->

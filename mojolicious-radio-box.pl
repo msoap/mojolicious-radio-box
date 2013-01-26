@@ -361,13 +361,38 @@ __DATA__
       }
       if (App.info.tag) {
         if (App.info.radio_title) {
-          return $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b>");
+          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
-          return $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b>");
+          $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b>");
         } else {
-          return $("#div_info").html("<b>" + App.info.tag.title + "</b>");
+          $("#div_info").html("<b>" + App.info.tag.title + "</b>");
         }
       }
+      if (App.info.radio_title && App.info.file.match(/http:\/\//)) {
+        $("#radio_stations").show();
+        if (App.radio_stations.length) {
+          return App.render_select_radio();
+        } else {
+          return App.do_get_radio();
+        }
+      }
+    },
+    render_select_radio: function() {
+      var item, new_option, select_input, _i, _len, _ref, _results;
+      select_input = $('#radio_stations')[0];
+      select_input.options.length = 0;
+      select_input.options.add(new Option(' - please select station -', ''));
+      _ref = App.radio_stations;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        new_option = new Option(item.title, item.url);
+        if (App.info.radio_title && App.info.file.match(/http:\/\//) && App.info.file === item.url) {
+          new_option.selected = true;
+        }
+        _results.push(select_input.options.add(new_option));
+      }
+      return _results;
     },
     do_pause: function() {
       $("#bt_pause").attr('disabled', 'disabled');
@@ -403,20 +428,10 @@ __DATA__
       });
     },
     do_get_radio: function() {
-      $("#radio_stations").show();
       return $.get('/get_radio', function(result) {
-        var item, select_input, _i, _len, _ref, _results;
+        $("#radio_stations").show();
         App.radio_stations = result.radio_stations;
-        select_input = $('#radio_stations')[0];
-        select_input.options.length = 0;
-        select_input.options.add(new Option(' - please select station -', ''));
-        _ref = App.radio_stations;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          item = _ref[_i];
-          _results.push(select_input.options.add(new Option(item.title, item.url)));
-        }
-        return _results;
+        return App.render_select_radio();
       });
     },
     do_select_radio: function(event) {
