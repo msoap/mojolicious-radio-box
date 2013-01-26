@@ -52,3 +52,9 @@ __DATA__
 
 @@ fontawesome-webfont.ttf (base64)
 #<<< base64 -b 80 src/static/fontawesome-webfont.ttf
+
+@@ apple-touch-icon.png (base64)
+#<<< base64 -b 80 src/static/apple-touch-icon-144x144.png
+
+@@ apple-touch-icon-144x144.png (base64)
+#<<< base64 -b 80 src/static/apple-touch-icon-144x144.png
