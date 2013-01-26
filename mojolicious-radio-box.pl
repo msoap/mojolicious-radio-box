@@ -249,7 +249,9 @@ __DATA__
       $(document).ajaxError(function() {
         return $("#div_error").css({
           display: 'block'
-        }).fadeOut(1500);
+        }).fadeOut(1500, function() {
+          return $("button.nav_buttons").removeAttr('disabled');
+        });
       });
       App.update_info();
       return window.setInterval(App.update_info, 15 * 1000);

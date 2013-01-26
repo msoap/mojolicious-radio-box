@@ -9,10 +9,13 @@ window.App =
         $("#bt_pause").on('click', App.do_pause)
         $("#bt_next").on('click', App.do_next)
         $("#bt_prev").on('click', App.do_prev)
+
         $(document).ajaxError () ->
             $("#div_error").css
                 display: 'block'
-            .fadeOut 1500
+            .fadeOut 1500, () ->
+                $("button.nav_buttons").removeAttr('disabled')
+
         App.update_info()
         window.setInterval App.update_info, 15 * 1000
 
