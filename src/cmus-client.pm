@@ -20,7 +20,8 @@ sub cmus_get_info {
     my $info = _cmus_parse_info(`cmus-remote --query`);
 
     # for internet-radio get title from file
-    if ($info->{status} eq 'playing'
+    if ($info->{status}
+        && $info->{status} eq 'playing'
         && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
         && -r $OPTIONS{last_track_file}
        )
@@ -92,6 +93,31 @@ do prev song
 
 sub cmus_prev {
     return _cmus_parse_info(`cmus-remote --prev --query`);
+}
+
+# ------------------------------------------------------------------------------
+
+=head1 cmus_play_radio
+
+play radio by url
+
+=cut
+
+sub cmus_play_radio {
+    my $url = shift;
+
+    if ($url) {
+        open my $FH, '|-', 'cmus-remote --queue' or die "Error open file: $!\n";
+        print $FH join("\n", 'clear'
+                           , 'player-stop'
+                           , "add $url"
+                           , 'player-next'
+                           , 'player-play'
+                      ) . "\n";
+        close $FH;
+    }
+
+    return cmus_get_info();
 }
 
 # ------------------------------------------------------------------------------

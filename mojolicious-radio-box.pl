@@ -33,6 +33,31 @@ sub init {
 }
 
 # ------------------------------------------------------------------------------
+sub get_radio_stations {
+    my $result = [];
+
+    if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
+        for my $m3u_file (glob "$OPTIONS{radio_playlist_dir}/*.m3u") {
+            my ($title) = $m3u_file =~ m{([^/]+\.m3u)$};
+            my $url;
+            open my $FH, '<', $m3u_file or die "Error open file: $!\n";
+            while (my $line = <$FH>) {
+                chomp $line;
+                if ($line =~ m{^http://}) {
+                    $url = $line;
+                    $url =~ s/\s+//g;
+                    last;
+                }
+            }
+            close $FH;
+            push @$result, {title => $title, url => $url} if $title && $url;
+        }
+    }
+
+    return $result;
+}
+
+# ------------------------------------------------------------------------------
 =head1 cmus player client
 
     http://cmus.sourceforge.net
@@ -55,7 +80,8 @@ sub cmus_get_info {
     my $info = _cmus_parse_info(`cmus-remote --query`);
 
     # for internet-radio get title from file
-    if ($info->{status} eq 'playing'
+    if ($info->{status}
+        && $info->{status} eq 'playing'
         && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
         && -r $OPTIONS{last_track_file}
        )
@@ -131,6 +157,31 @@ sub cmus_prev {
 
 # ------------------------------------------------------------------------------
 
+=head1 cmus_play_radio
+
+play radio by url
+
+=cut
+
+sub cmus_play_radio {
+    my $url = shift;
+
+    if ($url) {
+        open my $FH, '|-', 'cmus-remote --queue' or die "Error open file: $!\n";
+        print $FH join("\n", 'clear'
+                           , 'player-stop'
+                           , "add $url"
+                           , 'player-next'
+                           , 'player-play'
+                      ) . "\n";
+        close $FH;
+    }
+
+    return cmus_get_info();
+}
+
+# ------------------------------------------------------------------------------
+
 =head1 _cmus_parse_info
 
 Parse lines from cmus-remote -Q
@@ -160,34 +211,45 @@ sub _cmus_parse_info {
 # mojolicious routers ----------------------------------------------------------
 get '/' => 'index';
 
-get '/get_info'  => sub {
+get '/get_info' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_get_info()});
 };
 
-any '/pause'  => sub {
+any '/pause' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_pause()});
 };
 
-any '/play'  => sub {
+any '/play' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_play()});
 };
 
-any '/stop'  => sub {
+any '/stop' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_stop()});
 };
 
-any '/next'  => sub {
+any '/next' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_next()});
 };
 
-any '/prev'  => sub {
+any '/prev' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_prev()});
+};
+
+any '/get_radio' => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', radio_stations => get_radio_stations()});
+};
+
+any '/play_radio' => sub {
+    my $self = shift;
+    my $url = $self->param("url");
+    return $self->render_json({status => 'ok', info => cmus_play_radio($url)});
 };
 
 # go ---------------------------------------------------------------------------
@@ -231,6 +293,13 @@ __DATA__
           font-family: sans-serif;
           margin-top: 10px;
       }
+      #bt_get_radio {
+          width: 130px;
+      }
+      #radio_stations {
+          width: 170px;
+          display: none;
+      }
   </style>
   <link rel="stylesheet" href="/font-awesome.css">
 </head>
@@ -241,7 +310,9 @@ __DATA__
         <button class="nav_buttons" id="bt_pause">pause</button>
         <button class="nav_buttons" id="bt_next">next&nbsp;&nbsp;<i class="icon-forward"></i></button>
     </div>
-    <div id="div_info"></div>
+    <div id="div_info"></div><br>
+    <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio...</button>
+    <select id="radio_stations"></select>
     <div id="div_error">Server unavailable...</div>
 </body>
 </html>
@@ -258,14 +329,15 @@ __DATA__
       position: 0,
       duration: 0
     },
+    radio_stations: [],
     init: function() {
       $("#bt_pause").on('click', App.do_pause);
       $("#bt_next").on('click', App.do_next);
       $("#bt_prev").on('click', App.do_prev);
+      $("#bt_get_radio").on('click', App.do_get_radio);
+      $("#radio_stations").on('change', App.do_select_radio);
       $(document).ajaxError(function() {
-        return $("#div_error").css({
-          display: 'block'
-        }).fadeOut(1500, function() {
+        return $("#div_error").show().fadeOut(1500, function() {
           return $("button.nav_buttons").removeAttr('disabled');
         });
       });
@@ -327,6 +399,33 @@ __DATA__
         App.info = info_data.info;
         return App.render_info();
       });
+    },
+    do_get_radio: function() {
+      $("#radio_stations").show();
+      return $.get('/get_radio', function(result) {
+        var item, select_input, _i, _len, _ref, _results;
+        App.radio_stations = result.radio_stations;
+        select_input = $('#radio_stations')[0];
+        select_input.options.length = 0;
+        select_input.options.add(new Option(' - please select station -', ''));
+        _ref = App.radio_stations;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          _results.push(select_input.options.add(new Option(item.title, item.url)));
+        }
+        return _results;
+      });
+    },
+    do_select_radio: function(event) {
+      if (event.target.value) {
+        return $.get('/play_radio', {
+          url: event.target.value
+        }, function(info_data) {
+          App.info = info_data.info;
+          return App.render_info();
+        });
+      }
     }
   };
 
