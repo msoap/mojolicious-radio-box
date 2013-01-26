@@ -27,9 +27,9 @@ window.App =
     render_info: ->
         $("button.nav_buttons").removeAttr('disabled')
         if App.info.status == 'playing'
-            $("#bt_pause").html("&#9724; pause")
+            $("#bt_pause").html('<i class="icon-pause">&nbsp;&nbsp;pause')
         else if App.info.status == 'paused' || App.info.status == 'stopped'
-            $("#bt_pause").html("&#9658; play")
+            $("#bt_pause").html('<i class="icon-play">&nbsp;&nbsp;play')
 
         if App.info.tag
             if App.info.radio_title

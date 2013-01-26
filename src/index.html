@@ -8,8 +8,21 @@
       h1 {
           font-size: 80%;
       }
+      button.nav_buttons {
+          width: 95px;
+          height: 30px;
+          top: 5px;
+          border: 1px solid #888;
+          border-radius: 5px;
+          background-color: #eee;
+          box-shadow: 2px 2px 5px #888;
+      }
+      button.nav_buttons i {
+          font-size: 110%;
+      }
       #div_info {
-          font-family: "Arial Narrow", sans-serif;
+          margin-top: 5px;
+          font-family: sans-serif;
           font-size: 90%;
       }
       #div_error {
@@ -19,12 +32,15 @@
           margin-top: 10px;
       }
   </style>
+  <link rel="stylesheet" href="/font-awesome.css">
 </head>
 <body>
     <h1>♫♬ Mojolicious radio box</h1>
-    <button class="nav_buttons" id="bt_prev">⌫ prev</button>
-    <button class="nav_buttons" id="bt_pause"> pause</button>
-    <button class="nav_buttons" id="bt_next">next ⌦</button>
+    <div>
+        <button class="nav_buttons" id="bt_prev"><i class="icon-backward"></i>&nbsp;&nbsp;prev</button>
+        <button class="nav_buttons" id="bt_pause">pause</button>
+        <button class="nav_buttons" id="bt_next">next&nbsp;&nbsp;<i class="icon-forward"></i></button>
+    </div>
     <div id="div_info"></div>
     <div id="div_error">Server unavailable...</div>
 </body>

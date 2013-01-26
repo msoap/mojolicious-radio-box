@@ -39,3 +39,16 @@ __DATA__
 
 @@ script.js
 #<<< coffee -p src/radio-box-client.coffee
+
+@@ font-awesome.css
+#<<< src/static/font-awesome.min.css
+
+
+@@ fontawesome-webfont.eot (base64)
+#<<< base64 -b 80 src/static/fontawesome-webfont.eot
+
+@@ fontawesome-webfont.woff (base64)
+#<<< base64 -b 80 src/static/fontawesome-webfont.woff
+
+@@ fontawesome-webfont.ttf (base64)
+#<<< base64 -b 80 src/static/fontawesome-webfont.ttf
