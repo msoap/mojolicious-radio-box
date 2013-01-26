@@ -22,6 +22,7 @@ window.App =
             App.render_info()
 
     render_info: ->
+        $("button.nav_buttons").removeAttr('disabled')
         if App.info.status == 'playing'
             $("#bt_pause").html("&#9724; pause")
         else if App.info.status == 'paused' || App.info.status == 'stopped'
@@ -45,6 +46,7 @@ window.App =
                 """
 
     do_pause: ->
+        $("#bt_pause").attr('disabled', 'disabled')
         if App.info.duration > 0 && ! App.info.radio_title
             $.get '/pause', (info_data) ->
                 App.info = info_data.info
@@ -59,11 +61,13 @@ window.App =
                 App.render_info()
 
     do_next: ->
+        $("#bt_next").attr('disabled', 'disabled')
         $.get '/next', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     do_prev: ->
+        $("#bt_prev").attr('disabled', 'disabled')
         $.get '/prev', (info_data) ->
             App.info = info_data.info
             App.render_info()

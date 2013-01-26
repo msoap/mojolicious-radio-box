@@ -222,9 +222,9 @@ __DATA__
 </head>
 <body>
     <h1>♫♬ Mojolicious radio box</h1>
-    <button id="bt_prev">⌫ prev</button>
-    <button id="bt_pause"> pause</button>
-    <button id="bt_next">next ⌦</button>
+    <button class="nav_buttons" id="bt_prev">⌫ prev</button>
+    <button class="nav_buttons" id="bt_pause"> pause</button>
+    <button class="nav_buttons" id="bt_next">next ⌦</button>
     <div id="div_info"></div>
     <div id="div_error">Server unavailable...</div>
 </body>
@@ -261,6 +261,7 @@ __DATA__
       });
     },
     render_info: function() {
+      $("button.nav_buttons").removeAttr('disabled');
       if (App.info.status === 'playing') {
         $("#bt_pause").html("&#9724; pause");
       } else if (App.info.status === 'paused' || App.info.status === 'stopped') {
@@ -277,6 +278,7 @@ __DATA__
       }
     },
     do_pause: function() {
+      $("#bt_pause").attr('disabled', 'disabled');
       if (App.info.duration > 0 && !App.info.radio_title) {
         return $.get('/pause', function(info_data) {
           App.info = info_data.info;
@@ -295,12 +297,14 @@ __DATA__
       }
     },
     do_next: function() {
+      $("#bt_next").attr('disabled', 'disabled');
       return $.get('/next', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_prev: function() {
+      $("#bt_prev").attr('disabled', 'disabled');
       return $.get('/prev', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
