@@ -168,7 +168,8 @@ sub cmus_play_radio {
 
     if ($url) {
         open my $FH, '|-', 'cmus-remote' or die "Error open file: $!\n";
-        print $FH join("\n", 'clear'
+        print $FH join("\n", 'view playlist'
+                           , 'clear'
                            , 'player-stop'
                            , "add $url"
                            , 'player-play'
