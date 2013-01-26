@@ -171,8 +171,8 @@ sub cmus_play_radio {
         print $FH join("\n", 'clear'
                            , 'player-stop'
                            , "add $url"
-                           , 'player-next'
                            , 'player-play'
+                           , 'player-next'
                       ) . "\n";
         close $FH;
     }
