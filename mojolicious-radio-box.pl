@@ -37,21 +37,32 @@ sub get_radio_stations {
     my $result = [];
 
     if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
-        for my $m3u_file (glob "$OPTIONS{radio_playlist_dir}/*.m3u") {
-            my ($title) = $m3u_file =~ m{([^/]+)\.m3u$};
-            $title =~ s/_/ /g;
-            my $url;
+        for my $m3u_file (glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
+
+            my ($title_from_name, $ext) = $m3u_file =~ m{([^/]+)\.(m3u|pls)$};
+            $title_from_name =~ s/_/ /g;
+            my ($title, $url);
+
             open my $FH, '<', $m3u_file or die "Error open file: $!\n";
+
             while (my $line = <$FH>) {
                 chomp $line;
-                if ($line =~ m{^http://}) {
-                    $url = $line;
-                    $url =~ s/\s+//g;
-                    last;
+
+                if ($ext eq 'm3u') {
+                    if ($line =~ m{^http://}) {
+                        $url = $line;
+                        $url =~ s/\s+//g;
+                        last;
+                    }
+                } elsif ($ext eq 'pls') {
+                    $url   = $1 if $line =~ m{^File\d+=(http://.+)\s*$};
+                    $title = $1 if $line =~ m{^Title\d+=(.+)\s*$};
+                    last if $url && $title;
                 }
             }
+
             close $FH;
-            push @$result, {title => $title, url => $url} if $title && $url;
+            push @$result, {title => $title || $title_from_name, url => $url} if $url && ($title || $title_from_name);
         }
     }
 
