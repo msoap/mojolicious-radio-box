@@ -49,14 +49,15 @@ sub get_radio_stations {
                 chomp $line;
 
                 if ($ext eq 'm3u') {
-                    if ($line =~ m{^http://}) {
+                    $title = $1 if ! $title && $line =~ /^\#EXTINF: -?\d+, (.+?) \s* $/x;
+                    if (! $url && $line =~ m{^http://}) {
                         $url = $line;
                         $url =~ s/\s+//g;
-                        last;
                     }
+                    last if $title && $url;
                 } elsif ($ext eq 'pls') {
-                    $url   = $1 if $line =~ m{^File\d+=(http://.+)\s*$};
                     $title = $1 if $line =~ m{^Title\d+=(.+)\s*$};
+                    $url   = $1 if $line =~ m{^File\d+=(http://.+?)\s*$};
                     last if $url && $title;
                 }
             }
