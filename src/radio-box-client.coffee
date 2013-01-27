@@ -36,6 +36,9 @@ window.App =
         $("button.nav_buttons").removeAttr('disabled')
         if App.info.status == 'playing'
             $("#bt_pause").html('<i class="icon-pause">&nbsp;&nbsp;pause')
+            if App.info.duration == "-1"
+                $("#bt_prev").attr('disabled', 'disabled')
+                $("#bt_next").attr('disabled', 'disabled')
         else if App.info.status == 'paused' || App.info.status == 'stopped'
             $("#bt_pause").html('<i class="icon-play">&nbsp;&nbsp;play')
 
