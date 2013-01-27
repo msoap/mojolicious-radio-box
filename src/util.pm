@@ -15,6 +15,16 @@ sub init {
 }
 
 # ------------------------------------------------------------------------------
+
+=head1 get_radio_stations
+
+Get array with radio-station urls (from $OPTIONS{radio_playlist_dir} dir)
+
+testing:
+    perl -ME -E 'p from_json(get("http://localhost:8080/get_radio"))'
+
+=cut
+
 sub get_radio_stations {
     my $result = [];
 
