@@ -39,6 +39,7 @@ sub get_radio_stations {
     if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
         for my $m3u_file (glob "$OPTIONS{radio_playlist_dir}/*.m3u") {
             my ($title) = $m3u_file =~ m{([^/]+)\.m3u$};
+            $title =~ s/_/ /g;
             my $url;
             open my $FH, '<', $m3u_file or die "Error open file: $!\n";
             while (my $line = <$FH>) {
