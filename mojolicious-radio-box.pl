@@ -327,7 +327,7 @@ __DATA__
     <div id="div_info"></div><br>
     <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio...</button>
     <select id="radio_stations"></select>
-    <div id="div_error">Server unavailable...</div>
+    <div id="div_error">Server unavailable&hellip;</div>
 </body>
 </html>
 
