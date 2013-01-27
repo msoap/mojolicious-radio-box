@@ -277,6 +277,7 @@ __DATA__
 <!doctype html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.3, maximum-scale=2.0, user-scalable=yes"/>
   <title>Mojolicious radio box</title>
   <script src="/js/jquery.js"></script>
   <script src="script.js"></script>
