@@ -304,6 +304,9 @@ __DATA__
           background-color: #eee;
           box-shadow: 2px 2px 5px #888;
       }
+      button.nav_buttons:hover {
+          box-shadow: 2px 2px 6px #519BB6;
+      }
       button.nav_buttons i {
           font-size: 110%;
       }
