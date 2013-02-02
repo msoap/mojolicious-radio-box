@@ -299,6 +299,7 @@ __DATA__
           width: 95px;
           height: 30px;
           top: 5px;
+          font-size: 10pt;
           border: 1px solid #888;
           border-radius: 5px;
           background-color: #eee;
@@ -308,10 +309,11 @@ __DATA__
           box-shadow: 2px 2px 6px #519BB6;
       }
       button.nav_buttons i {
-          font-size: 110%;
+          font-size: 95%;
       }
       #div_info {
-          margin-top: 5px;
+          margin-top: 10px;
+          margin-bottom: 10px;
           font-family: sans-serif;
           font-size: 90%;
       }
@@ -335,10 +337,10 @@ __DATA__
     <h1>♫♬ Mojolicious radio box</h1>
     <div>
         <button class="nav_buttons" id="bt_prev"><i class="icon-backward"></i>&nbsp;&nbsp;prev</button>
-        <button class="nav_buttons" id="bt_pause">pause</button>
+        <button class="nav_buttons" id="bt_pause"><i class="icon-play"></i>&nbsp;&nbsp;play</button>
         <button class="nav_buttons" id="bt_next">next&nbsp;&nbsp;<i class="icon-forward"></i></button>
     </div>
-    <div id="div_info"></div><br>
+    <div id="div_info"></div>
     <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio&hellip;</button>
     <select id="radio_stations"></select>
     <div id="div_error">Server unavailable&hellip;</div>
