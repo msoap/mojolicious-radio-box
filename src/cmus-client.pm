@@ -32,6 +32,10 @@ sub cmus_get_info {
         close $FH;
     }
 
+    if ($OPTIONS{is_mac}) {
+        $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
+    }
+
     return $info;
 }
 
@@ -150,6 +154,30 @@ sub cmus_get_music {
     }
 
     return cmus_get_info();
+}
+
+# ------------------------------------------------------------------------------
+
+=head2 cmus_set_volume
+
+Set sound volume
+
+=cut
+
+sub cmus_set_volume {
+    my $volume = shift;
+
+    die "cmus_set_volume: volume is invalid"
+        unless defined $volume
+            && $volume =~ /^\d+$/
+            && $volume >= 0
+            && $volume <= 100;
+
+    if ($OPTIONS{is_mac}) {
+        system("osascript", "-e", "set volume output volume $volume");
+    }
+
+    return;
 }
 
 # ------------------------------------------------------------------------------

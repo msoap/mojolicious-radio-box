@@ -44,6 +44,19 @@
           width: 170px;
           display: none;
       }
+      input#volume_slider {
+          margin: 7px 10px;
+          width: 150px;
+      }
+      .volume-buttons {
+          width: 50px;
+          position: relative;
+          top: -3px;
+          font-size: 10pt;
+          border: 1px solid #888;
+          border-radius: 5px;
+          background-color: #eee;
+      }
   </style>
   <link rel="stylesheet" href="/font-awesome.css">
 </head>
@@ -54,10 +67,17 @@
         <button class="nav_buttons" id="bt_pause"><i class="icon-play"></i>&nbsp;&nbsp;play</button>
         <button class="nav_buttons" id="bt_next">next&nbsp;&nbsp;<i class="icon-forward"></i></button>
     </div>
+
     <div id="div_info"></div>
-    <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio&hellip;</button>
+
+    <button class="nav_buttons" id="bt_get_radio"><i class="icon-tasks"></i>&nbsp;&nbsp;get radio&hellip;</button>
     <select id="radio_stations"></select><br>
-    <button class="nav_buttons" id="bt_get_music"><i class="icon-music"></i>&nbsp;&nbsp;get music&hellip;</button>
+    <button class="nav_buttons" id="bt_get_music"><i class="icon-music"></i>&nbsp;&nbsp;get music&hellip;</button><br><br>
+
+    <button id="volume_down" class="volume-buttons"><i class="icon-volume-down"></i></button>
+        <input id="volume_slider" type="range" min="0" max="100" step="1">
+    <button id="volume_up" class="volume-buttons"><i class="icon-volume-up" id="volume_up"></i></button>
+
     <div id="div_error">Server unavailable&hellip;</div>
 </body>
 </html>

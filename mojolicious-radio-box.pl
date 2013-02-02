@@ -31,6 +31,8 @@ sub init {
         close $FH;
         $OPTIONS{radio_playlist_dir} =~ s/^~/$ENV{HOME}/ if defined $OPTIONS{radio_playlist_dir};
     }
+
+    $OPTIONS{is_mac} = 1 if $^O eq 'darwin';
 }
 
 # ------------------------------------------------------------------------------
@@ -114,6 +116,10 @@ sub cmus_get_info {
         my $add_info = eval{from_json(join("", <$FH>))} || {};
         $info->{radio_title} = $add_info->{title} if $add_info->{title};
         close $FH;
+    }
+
+    if ($OPTIONS{is_mac}) {
+        $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
     }
 
     return $info;
@@ -238,6 +244,30 @@ sub cmus_get_music {
 
 # ------------------------------------------------------------------------------
 
+=head2 cmus_set_volume
+
+Set sound volume
+
+=cut
+
+sub cmus_set_volume {
+    my $volume = shift;
+
+    die "cmus_set_volume: volume is invalid"
+        unless defined $volume
+            && $volume =~ /^\d+$/
+            && $volume >= 0
+            && $volume <= 100;
+
+    if ($OPTIONS{is_mac}) {
+        system("osascript", "-e", "set volume output volume $volume");
+    }
+
+    return;
+}
+
+# ------------------------------------------------------------------------------
+
 =head1 _cmus_parse_info
 
 Parse lines from cmus-remote -Q
@@ -313,6 +343,14 @@ any '/get_music' => sub {
     return $self->render_json({status => 'ok', info => cmus_get_music()});
 };
 
+any '/set_volume' => sub {
+    my $self = shift;
+
+    my $volume = $self->param("volume");
+    cmus_set_volume($volume);
+    return $self->render_json({status => 'ok'});
+};
+
 # go ---------------------------------------------------------------------------
 init();
 app
@@ -367,6 +405,19 @@ __DATA__
           width: 170px;
           display: none;
       }
+      input#volume_slider {
+          margin: 7px 10px;
+          width: 150px;
+      }
+      .volume-buttons {
+          width: 50px;
+          position: relative;
+          top: -3px;
+          font-size: 10pt;
+          border: 1px solid #888;
+          border-radius: 5px;
+          background-color: #eee;
+      }
   </style>
   <link rel="stylesheet" href="/font-awesome.css">
 </head>
@@ -377,10 +428,17 @@ __DATA__
         <button class="nav_buttons" id="bt_pause"><i class="icon-play"></i>&nbsp;&nbsp;play</button>
         <button class="nav_buttons" id="bt_next">next&nbsp;&nbsp;<i class="icon-forward"></i></button>
     </div>
+
     <div id="div_info"></div>
-    <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio&hellip;</button>
+
+    <button class="nav_buttons" id="bt_get_radio"><i class="icon-tasks"></i>&nbsp;&nbsp;get radio&hellip;</button>
     <select id="radio_stations"></select><br>
-    <button class="nav_buttons" id="bt_get_music"><i class="icon-music"></i>&nbsp;&nbsp;get music&hellip;</button>
+    <button class="nav_buttons" id="bt_get_music"><i class="icon-music"></i>&nbsp;&nbsp;get music&hellip;</button><br><br>
+
+    <button id="volume_down" class="volume-buttons"><i class="icon-volume-down"></i></button>
+        <input id="volume_slider" type="range" min="0" max="100" step="1">
+    <button id="volume_up" class="volume-buttons"><i class="icon-volume-up" id="volume_up"></i></button>
+
     <div id="div_error">Server unavailable&hellip;</div>
 </body>
 </html>
@@ -405,6 +463,18 @@ __DATA__
       $("#bt_get_radio").on('click', App.do_get_radio);
       $("#bt_get_music").on('click', App.do_get_music);
       $("#radio_stations").on('change', App.do_select_radio);
+      $("#volume_slider").on('change', {
+        absolute: true
+      }, App.do_change_volume);
+      $("#volume_slider").on('blur', {
+        absolute: true
+      }, App.do_change_volume);
+      $("#volume_down").on('click', {
+        down: 10
+      }, App.do_change_volume);
+      $("#volume_up").on('click', {
+        up: 10
+      }, App.do_change_volume);
       $(document).ajaxError(function() {
         return $("#div_error").show().fadeOut(1500, function() {
           return $("button.nav_buttons").removeAttr('disabled');
@@ -445,10 +515,13 @@ __DATA__
       if (App.info.radio_title && App.info.file.match(/http:\/\//)) {
         $("#radio_stations").show();
         if (App.radio_stations.length) {
-          return App.render_select_radio();
+          App.render_select_radio();
         } else {
-          return App.do_get_radio();
+          App.do_get_radio();
         }
+      }
+      if (App.info.volume !== void 0) {
+        return $('input#volume_slider').val(App.info.volume);
       }
     },
     render_select_radio: function() {
@@ -523,6 +596,38 @@ __DATA__
           return App.render_info();
         });
       }
+    },
+    do_change_volume: function(event) {
+      var new_volume;
+      if (App._change_valume_tid) {
+        window.clearTimeout(App._change_valume_tid);
+        App._change_valume_tid = void 0;
+      }
+      new_volume = 0;
+      if (event.data.up) {
+        new_volume = App.info.volume + event.data.up;
+        if (new_volume > 100) {
+          new_volume = 100;
+        }
+      } else if (event.data.down) {
+        new_volume = App.info.volume - event.data.down;
+        if (new_volume < 0) {
+          new_volume = 0;
+        }
+      } else if (event.data.absolute) {
+        new_volume = parseInt($("#volume_slider").val());
+      } else {
+        return;
+      }
+      return App._change_valume_tid = window.setTimeout(function() {
+        if (new_volume !== void 0 && new_volume !== App.info.volume) {
+          App.info.volume = new_volume;
+          $("#volume_slider").val(new_volume);
+          return $.get('/set_volume', {
+            volume: new_volume
+          });
+        }
+      }, 200);
     }
   };
 

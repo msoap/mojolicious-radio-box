@@ -12,6 +12,8 @@ sub init {
         close $FH;
         $OPTIONS{radio_playlist_dir} =~ s/^~/$ENV{HOME}/ if defined $OPTIONS{radio_playlist_dir};
     }
+
+    $OPTIONS{is_mac} = 1 if $^O eq 'darwin';
 }
 
 # ------------------------------------------------------------------------------

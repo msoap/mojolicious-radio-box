@@ -15,6 +15,10 @@ window.App =
         $("#bt_get_radio").on('click', App.do_get_radio)
         $("#bt_get_music").on('click', App.do_get_music)
         $("#radio_stations").on('change', App.do_select_radio)
+        $("#volume_slider").on('change', {absolute: true}, App.do_change_volume)
+        $("#volume_slider").on('blur', {absolute: true}, App.do_change_volume)
+        $("#volume_down").on('click', {down: 10}, App.do_change_volume)
+        $("#volume_up").on('click', {up: 10}, App.do_change_volume)
 
         $(document).ajaxError () ->
             $("#div_error").show()
@@ -67,6 +71,9 @@ window.App =
                 App.render_select_radio()
             else
                 App.do_get_radio()
+
+        if App.info.volume != undefined
+            $('input#volume_slider').val(App.info.volume)
 
     # ...........................................
     render_select_radio: ->
@@ -132,5 +139,32 @@ window.App =
                     App.info = info_data.info
                     App.render_info()
 
+    # ...........................................
+    do_change_volume: (event) ->
+        if App._change_valume_tid
+            window.clearTimeout App._change_valume_tid
+            App._change_valume_tid = undefined
+
+        new_volume = 0
+        if event.data.up
+            new_volume = App.info.volume + event.data.up
+            new_volume = 100 if new_volume > 100
+        else if event.data.down
+            new_volume = App.info.volume - event.data.down
+            new_volume = 0 if new_volume < 0
+        else if event.data.absolute
+            new_volume = parseInt($("#volume_slider").val())
+        else
+            return
+
+        App._change_valume_tid = window.setTimeout(
+            () ->
+                if new_volume != undefined && new_volume != App.info.volume
+                    App.info.volume = new_volume
+                    $("#volume_slider").val(new_volume)
+                    $.get '/set_volume'
+                        volume: new_volume
+            200
+        )
 # .............................................................................
 $ () -> App.init()
