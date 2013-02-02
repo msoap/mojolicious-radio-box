@@ -40,3 +40,8 @@ any '/play_radio' => sub {
     my $url = $self->param("url");
     return $self->render_json({status => 'ok', info => cmus_play_radio($url)});
 };
+
+any '/get_music' => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_get_music()});
+};

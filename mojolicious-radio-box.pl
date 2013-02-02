@@ -13,6 +13,7 @@ use Data::Dumper;
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
     last_track_file => "$ENV{HOME}/.cmus/last_track.txt",
+    playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
 );
 
 # ------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ sub init {
 
 # ------------------------------------------------------------------------------
 
-=head1 get_radio_stations
+=head2 get_radio_stations
 
 Get array with radio-station urls (from $OPTIONS{radio_playlist_dir} dir)
 
@@ -89,7 +90,7 @@ sub get_radio_stations {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_get_info
+=head2 cmus_get_info
 
 Get info from cmus player
 
@@ -105,7 +106,7 @@ sub cmus_get_info {
     # for internet-radio get title from file
     if ($info->{status}
         && $info->{status} eq 'playing'
-        && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
+        && ($info->{duration} == -1 || $info->{file} =~ m[^https?://])
         && -r $OPTIONS{last_track_file}
        )
     {
@@ -120,7 +121,7 @@ sub cmus_get_info {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_pause
+=head2 cmus_pause
 
 Pause/unpause player
 
@@ -132,7 +133,7 @@ sub cmus_pause {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_play
+=head2 cmus_play
 
 Play player
 
@@ -144,7 +145,7 @@ sub cmus_play {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_stop
+=head2 cmus_stop
 
 Stop player
 
@@ -156,7 +157,7 @@ sub cmus_stop {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_next
+=head2 cmus_next
 
 do next song
 
@@ -168,7 +169,7 @@ sub cmus_next {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_prev
+=head2 cmus_prev
 
 do prev song
 
@@ -180,7 +181,7 @@ sub cmus_prev {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_play_radio
+=head2 cmus_play_radio
 
 play radio by url
 
@@ -190,15 +191,46 @@ sub cmus_play_radio {
     my $url = shift;
 
     if ($url) {
-        open my $FH, '|-', 'cmus-remote' or die "Error open file: $!\n";
-        print $FH join("\n", 'view playlist'
+        open my $PIPE, '|-', 'cmus-remote' or die "Error open file: $!\n";
+        print $PIPE join("\n", 'view playlist'
+                           , 'save'
                            , 'clear'
                            , 'player-stop'
                            , "add $url"
                            , 'player-play'
                            , 'player-next'
                       ) . "\n";
+        close $PIPE;
+    }
+
+    return cmus_get_info();
+}
+
+# ------------------------------------------------------------------------------
+
+=head2 cmus_get_music
+
+=cut
+
+sub cmus_get_music {
+    if (-r $OPTIONS{playlist_file}) {
+        open my $FH, '<', $OPTIONS{playlist_file} or die "Error open file: $!\n";
+        my @playlist = grep {$_ && $_ ne '' && ! m|^https?://|}
+                       map {chomp; $_}
+                       <$FH>;
         close $FH;
+
+        if (@playlist) {
+            open my $PIPE, '|-', 'cmus-remote' or die "Error open file: $!\n";
+            print $PIPE join("\n", 'view playlist'
+                               , 'clear'
+                               , 'player-stop'
+                               , map({"add $_"} @playlist)
+                               , 'player-play'
+                               , 'player-next'
+                          ) . "\n";
+            close $PIPE;
+        }
     }
 
     return cmus_get_info();
@@ -276,6 +308,11 @@ any '/play_radio' => sub {
     return $self->render_json({status => 'ok', info => cmus_play_radio($url)});
 };
 
+any '/get_music' => sub {
+    my $self = shift;
+    return $self->render_json({status => 'ok', info => cmus_get_music()});
+};
+
 # go ---------------------------------------------------------------------------
 init();
 app
@@ -290,7 +327,7 @@ __DATA__
   <meta name="viewport" content="width=device-width, initial-scale=1.3, maximum-scale=2.0, user-scalable=yes"/>
   <title>Mojolicious radio box</title>
   <script src="/js/jquery.js"></script>
-  <script src="script.js"></script>
+  <script src="/script.js"></script>
   <style>
       h1 {
           font-size: 80%;
@@ -323,7 +360,7 @@ __DATA__
           font-family: sans-serif;
           margin-top: 10px;
       }
-      #bt_get_radio {
+      #bt_get_radio, #bt_get_music {
           width: 130px;
       }
       #radio_stations {
@@ -342,7 +379,8 @@ __DATA__
     </div>
     <div id="div_info"></div>
     <button class="nav_buttons" id="bt_get_radio"><i class="icon-volume-up"></i>&nbsp;&nbsp;get radio&hellip;</button>
-    <select id="radio_stations"></select>
+    <select id="radio_stations"></select><br>
+    <button class="nav_buttons" id="bt_get_music"><i class="icon-music"></i>&nbsp;&nbsp;get music&hellip;</button>
     <div id="div_error">Server unavailable&hellip;</div>
 </body>
 </html>
@@ -365,6 +403,7 @@ __DATA__
       $("#bt_next").on('click', App.do_next);
       $("#bt_prev").on('click', App.do_prev);
       $("#bt_get_radio").on('click', App.do_get_radio);
+      $("#bt_get_music").on('click', App.do_get_music);
       $("#radio_stations").on('change', App.do_select_radio);
       $(document).ajaxError(function() {
         return $("#div_error").show().fadeOut(1500, function() {
@@ -398,6 +437,7 @@ __DATA__
           $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
           $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b>");
+          $("#radio_stations").hide()[0].selectedIndex = 0;
         } else {
           $("#div_info").html("<b>" + App.info.tag.title + "</b>");
         }
@@ -466,6 +506,12 @@ __DATA__
         $("#radio_stations").show();
         App.radio_stations = result.radio_stations;
         return App.render_select_radio();
+      });
+    },
+    do_get_music: function() {
+      return $.get('/get_music', function(info_data) {
+        App.info = info_data.info;
+        return App.render_info();
       });
     },
     do_select_radio: function(event) {

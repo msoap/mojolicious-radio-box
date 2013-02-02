@@ -16,7 +16,7 @@ sub init {
 
 # ------------------------------------------------------------------------------
 
-=head1 get_radio_stations
+=head2 get_radio_stations
 
 Get array with radio-station urls (from $OPTIONS{radio_playlist_dir} dir)
 

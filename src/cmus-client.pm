@@ -6,7 +6,7 @@
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_get_info
+=head2 cmus_get_info
 
 Get info from cmus player
 
@@ -22,7 +22,7 @@ sub cmus_get_info {
     # for internet-radio get title from file
     if ($info->{status}
         && $info->{status} eq 'playing'
-        && ($info->{duration} == -1 || $info->{file} =~ m[^http://])
+        && ($info->{duration} == -1 || $info->{file} =~ m[^https?://])
         && -r $OPTIONS{last_track_file}
        )
     {
@@ -37,7 +37,7 @@ sub cmus_get_info {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_pause
+=head2 cmus_pause
 
 Pause/unpause player
 
@@ -49,7 +49,7 @@ sub cmus_pause {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_play
+=head2 cmus_play
 
 Play player
 
@@ -61,7 +61,7 @@ sub cmus_play {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_stop
+=head2 cmus_stop
 
 Stop player
 
@@ -73,7 +73,7 @@ sub cmus_stop {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_next
+=head2 cmus_next
 
 do next song
 
@@ -85,7 +85,7 @@ sub cmus_next {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_prev
+=head2 cmus_prev
 
 do prev song
 
@@ -97,7 +97,7 @@ sub cmus_prev {
 
 # ------------------------------------------------------------------------------
 
-=head1 cmus_play_radio
+=head2 cmus_play_radio
 
 play radio by url
 
@@ -107,15 +107,46 @@ sub cmus_play_radio {
     my $url = shift;
 
     if ($url) {
-        open my $FH, '|-', 'cmus-remote' or die "Error open file: $!\n";
-        print $FH join("\n", 'view playlist'
+        open my $PIPE, '|-', 'cmus-remote' or die "Error open file: $!\n";
+        print $PIPE join("\n", 'view playlist'
+                           , 'save'
                            , 'clear'
                            , 'player-stop'
                            , "add $url"
                            , 'player-play'
                            , 'player-next'
                       ) . "\n";
+        close $PIPE;
+    }
+
+    return cmus_get_info();
+}
+
+# ------------------------------------------------------------------------------
+
+=head2 cmus_get_music
+
+=cut
+
+sub cmus_get_music {
+    if (-r $OPTIONS{playlist_file}) {
+        open my $FH, '<', $OPTIONS{playlist_file} or die "Error open file: $!\n";
+        my @playlist = grep {$_ && $_ ne '' && ! m|^https?://|}
+                       map {chomp; $_}
+                       <$FH>;
         close $FH;
+
+        if (@playlist) {
+            open my $PIPE, '|-', 'cmus-remote' or die "Error open file: $!\n";
+            print $PIPE join("\n", 'view playlist'
+                               , 'clear'
+                               , 'player-stop'
+                               , map({"add $_"} @playlist)
+                               , 'player-play'
+                               , 'player-next'
+                          ) . "\n";
+            close $PIPE;
+        }
     }
 
     return cmus_get_info();

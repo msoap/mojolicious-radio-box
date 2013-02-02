@@ -13,6 +13,7 @@ use Data::Dumper;
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
     last_track_file => "$ENV{HOME}/.cmus/last_track.txt",
+    playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
 );
 
 # ------------------------------------------------------------------------------

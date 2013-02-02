@@ -13,6 +13,7 @@ window.App =
         $("#bt_next").on('click', App.do_next)
         $("#bt_prev").on('click', App.do_prev)
         $("#bt_get_radio").on('click', App.do_get_radio)
+        $("#bt_get_music").on('click', App.do_get_music)
         $("#radio_stations").on('change', App.do_select_radio)
 
         $(document).ajaxError () ->
@@ -54,6 +55,7 @@ window.App =
                     <i>#{App.info.tag.album}</i><br>
                     <b>#{App.info.tag.title}</b>
                 """
+                $("#radio_stations").hide()[0].selectedIndex = 0
             else
                 $("#div_info").html """
                     <b>#{App.info.tag.title}</b>
@@ -77,7 +79,7 @@ window.App =
             if App.info.radio_title && App.info.file.match(/http:\/\//) && App.info.file == item.url
                 new_option.selected = true
             select_input.options.add(new_option)
-        
+
     # ...........................................
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
@@ -114,6 +116,12 @@ window.App =
             $("#radio_stations").show()
             App.radio_stations = result.radio_stations;
             App.render_select_radio()
+
+    # ...........................................
+    do_get_music: ->
+        $.get '/get_music', (info_data) ->
+            App.info = info_data.info
+            App.render_info()
 
     # ...........................................
     do_select_radio: (event) ->
