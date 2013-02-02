@@ -544,15 +544,15 @@ __DATA__
         $("#bt_pause").html('<i class="icon-play">&nbsp;&nbsp;play');
       }
       if (App.info.tag) {
+        position = parseInt(App.info.position) > 0 ? " (" + App.format_track_time(parseInt(App.info.position)) + ")" : "";
         if (App.info.radio_title) {
-          position = parseInt(App.info.position) > 0 ? " (" + App.format_track_time(parseInt(App.info.position)) + ")" : "";
           $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + position + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
           duration = parseInt(App.info.duration) > 0 ? " (" + App.format_track_time(parseInt(App.info.duration)) + ")" : "";
           $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + duration + "</b>");
           $("#radio_stations").hide()[0].selectedIndex = 0;
         } else {
-          $("#div_info").html("<b>" + App.info.tag.title + "</b>");
+          $("#div_info").html("<b>" + App.info.tag.title + position + "</b>");
         }
       }
       if (App.info.radio_title && App.info.file.match(/http:\/\//)) {

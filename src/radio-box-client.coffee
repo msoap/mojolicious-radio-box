@@ -48,11 +48,11 @@ window.App =
             $("#bt_pause").html('<i class="icon-play">&nbsp;&nbsp;play')
 
         if App.info.tag
+            position = if parseInt(App.info.position) > 0
+                           " (" + App.format_track_time(parseInt(App.info.position)) + ")"
+                       else
+                           ""
             if App.info.radio_title
-                position = if parseInt(App.info.position) > 0
-                               " (" + App.format_track_time(parseInt(App.info.position)) + ")"
-                           else
-                               ""
                 $("#div_info").html """
                     #{App.info.tag.title}<br>
                     <b>#{App.info.radio_title}#{position}</b>
@@ -72,7 +72,7 @@ window.App =
 
             else
                 $("#div_info").html """
-                    <b>#{App.info.tag.title}</b>
+                    <b>#{App.info.tag.title}#{position}</b>
                 """
 
         if App.info.radio_title && App.info.file.match(/http:\/\//)
