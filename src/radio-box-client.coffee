@@ -49,17 +49,27 @@ window.App =
 
         if App.info.tag
             if App.info.radio_title
+                position = if parseInt(App.info.position) > 0
+                               " (" + App.format_track_time(parseInt(App.info.position)) + ")"
+                           else
+                               ""
                 $("#div_info").html """
                     #{App.info.tag.title}<br>
-                    <b>#{App.info.radio_title}</b>
+                    <b>#{App.info.radio_title}#{position}</b>
                 """
+
             else if App.info.tag.artist && App.info.tag.album
+                duration = if parseInt(App.info.duration) > 0
+                               " (" + App.format_track_time(parseInt(App.info.duration)) + ")"
+                           else
+                               ""
                 $("#div_info").html """
                     #{App.info.tag.artist}<br>
                     <i>#{App.info.tag.album}</i><br>
-                    <b>#{App.info.tag.title}</b>
+                    <b>#{App.info.tag.title}#{duration}</b>
                 """
                 $("#radio_stations").hide()[0].selectedIndex = 0
+
             else
                 $("#div_info").html """
                     <b>#{App.info.tag.title}</b>
@@ -88,6 +98,17 @@ window.App =
             select_input.options.add(new_option)
 
     # ...........................................
+    format_track_time: (all_seconds) ->
+        hours = Math.floor(all_seconds / 3600)
+        minutes = Math.floor((all_seconds - hours * 3600) / 60)
+        seconds = (all_seconds - hours * 3600 - minutes * 60) % 60
+        minutes = "0#{minutes}" if minutes < 10
+        seconds = "0#{seconds}" if seconds < 10
+        result = "#{minutes}:#{seconds}"
+        result = "#{hours}:#{result}" if hours > 0
+        return result
+
+    # events ....................................
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
         if App.info.duration > 0 && ! App.info.radio_title

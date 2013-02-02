@@ -492,6 +492,7 @@ __DATA__
       });
     },
     render_info: function() {
+      var duration, position;
       $("button.nav_buttons").removeAttr('disabled');
       if (App.info.status === 'playing') {
         $("#bt_pause").html('<i class="icon-pause">&nbsp;&nbsp;pause');
@@ -504,9 +505,11 @@ __DATA__
       }
       if (App.info.tag) {
         if (App.info.radio_title) {
-          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + "</b>");
+          position = parseInt(App.info.position) > 0 ? " (" + App.format_track_time(parseInt(App.info.position)) + ")" : "";
+          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + position + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
-          $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + "</b>");
+          duration = parseInt(App.info.duration) > 0 ? " (" + App.format_track_time(parseInt(App.info.duration)) + ")" : "";
+          $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + duration + "</b>");
           $("#radio_stations").hide()[0].selectedIndex = 0;
         } else {
           $("#div_info").html("<b>" + App.info.tag.title + "</b>");
@@ -540,6 +543,23 @@ __DATA__
         _results.push(select_input.options.add(new_option));
       }
       return _results;
+    },
+    format_track_time: function(all_seconds) {
+      var hours, minutes, result, seconds;
+      hours = Math.floor(all_seconds / 3600);
+      minutes = Math.floor((all_seconds - hours * 3600) / 60);
+      seconds = (all_seconds - hours * 3600 - minutes * 60) % 60;
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+      result = "" + minutes + ":" + seconds;
+      if (hours > 0) {
+        result = "" + hours + ":" + result;
+      }
+      return result;
     },
     do_pause: function() {
       $("#bt_pause").attr('disabled', 'disabled');
