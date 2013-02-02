@@ -112,29 +112,29 @@ window.App =
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
         if App.info.duration > 0 && ! App.info.radio_title
-            $.get '/pause', (info_data) ->
+            $.post '/pause', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
         else if App.info.status == 'playing'
-            $.get '/stop', (info_data) ->
+            $.post '/stop', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
         else if App.info.status == 'stopped'
-            $.get '/play', (info_data) ->
+            $.post '/play', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
 
     # ...........................................
     do_next: ->
         $("#bt_next").attr('disabled', 'disabled')
-        $.get '/next', (info_data) ->
+        $.post '/next', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     # ...........................................
     do_prev: ->
         $("#bt_prev").attr('disabled', 'disabled')
-        $.get '/prev', (info_data) ->
+        $.post '/prev', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
@@ -154,7 +154,7 @@ window.App =
     # ...........................................
     do_select_radio: (event) ->
         if event.target.value
-            $.get '/play_radio'
+            $.post '/play_radio'
                 url: event.target.value
                 (info_data) ->
                     App.info = info_data.info
@@ -183,7 +183,7 @@ window.App =
                 if new_volume != undefined && new_volume != App.info.volume
                     App.info.volume = new_volume
                     $("#volume_slider").val(new_volume)
-                    $.get '/set_volume'
+                    $.post '/set_volume'
                         volume: new_volume
             200
         )

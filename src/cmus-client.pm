@@ -35,6 +35,7 @@ sub cmus_get_info {
     if ($OPTIONS{is_mac}) {
         $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
     }
+    $info->{server_version} = $VERSION;
 
     return $info;
 }

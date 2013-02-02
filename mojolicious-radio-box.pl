@@ -1,5 +1,14 @@
 #!/usr/bin/perl
 
+=head1 Mojolicious radio box
+
+Small web application for control radio/music player (cmus).
+It can be run on a server/desktop/raspberry pi.
+
+https://github.com/msoap/mojolicious-radio-box
+
+=cut
+
 use strict;
 use warnings;
 
@@ -9,6 +18,8 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use JSON;
 use Data::Dumper;
+
+our $VERSION = '0.01';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
@@ -121,6 +132,7 @@ sub cmus_get_info {
     if ($OPTIONS{is_mac}) {
         $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
     }
+    $info->{server_version} = $VERSION;
 
     return $info;
 }
@@ -302,54 +314,82 @@ get '/get_info' => sub {
     return $self->render_json({status => 'ok', info => cmus_get_info()});
 };
 
-any '/pause' => sub {
+post '/pause' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_pause()});
 };
 
-any '/play' => sub {
+post '/play' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_play()});
 };
 
-any '/stop' => sub {
+post '/stop' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_stop()});
 };
 
-any '/next' => sub {
+post '/next' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_next()});
 };
 
-any '/prev' => sub {
+post '/prev' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_prev()});
 };
 
-any '/get_radio' => sub {
+get '/get_radio' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', radio_stations => get_radio_stations()});
 };
 
-any '/play_radio' => sub {
+post '/play_radio' => sub {
     my $self = shift;
     my $url = $self->param("url");
     return $self->render_json({status => 'ok', info => cmus_play_radio($url)});
 };
 
-any '/get_music' => sub {
+get '/get_music' => sub {
     my $self = shift;
     return $self->render_json({status => 'ok', info => cmus_get_music()});
 };
 
-any '/set_volume' => sub {
+post '/set_volume' => sub {
     my $self = shift;
 
     my $volume = $self->param("volume");
     cmus_set_volume($volume);
     return $self->render_json({status => 'ok'});
 };
+
+# curl -s http://localhost:8080/help.txt
+get '/help' => sub {
+    my $self = shift;
+    my $routes = $self->app->routes();
+    my $result = join "\n",
+                 map {
+                     ($_->{via} ? join("/", @{$_->{via}}) : "ANY")
+                     . " "
+                     . ($_->{pattern}->{pattern} || "/")
+                 }
+                 sort {$a->{pattern}->{pattern} cmp $b->{pattern}->{pattern}}
+                 @{$routes->{children}};
+
+    return $self->render_text($result);
+};
+
+get '/version' => sub {
+    my $self = shift;
+    return $self->render_text($VERSION);
+};
+
+app->hook(
+    before_dispatch => sub {
+        my $self = shift;
+        $self->res->headers->header('Server' => "Mojolicious radio box - $VERSION");
+    }
+);
 
 # go ---------------------------------------------------------------------------
 init();
@@ -564,17 +604,17 @@ __DATA__
     do_pause: function() {
       $("#bt_pause").attr('disabled', 'disabled');
       if (App.info.duration > 0 && !App.info.radio_title) {
-        return $.get('/pause', function(info_data) {
+        return $.post('/pause', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
       } else if (App.info.status === 'playing') {
-        return $.get('/stop', function(info_data) {
+        return $.post('/stop', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
       } else if (App.info.status === 'stopped') {
-        return $.get('/play', function(info_data) {
+        return $.post('/play', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
@@ -582,14 +622,14 @@ __DATA__
     },
     do_next: function() {
       $("#bt_next").attr('disabled', 'disabled');
-      return $.get('/next', function(info_data) {
+      return $.post('/next', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_prev: function() {
       $("#bt_prev").attr('disabled', 'disabled');
-      return $.get('/prev', function(info_data) {
+      return $.post('/prev', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
@@ -609,7 +649,7 @@ __DATA__
     },
     do_select_radio: function(event) {
       if (event.target.value) {
-        return $.get('/play_radio', {
+        return $.post('/play_radio', {
           url: event.target.value
         }, function(info_data) {
           App.info = info_data.info;
@@ -643,7 +683,7 @@ __DATA__
         if (new_volume !== void 0 && new_volume !== App.info.volume) {
           App.info.volume = new_volume;
           $("#volume_slider").val(new_volume);
-          return $.get('/set_volume', {
+          return $.post('/set_volume', {
             volume: new_volume
           });
         }

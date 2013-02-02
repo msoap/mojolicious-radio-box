@@ -1,5 +1,14 @@
 #!/usr/bin/perl
 
+=head1 Mojolicious radio box
+
+Small web application for control radio/music player (cmus).
+It can be run on a server/desktop/raspberry pi.
+
+https://github.com/msoap/mojolicious-radio-box
+
+=cut
+
 use strict;
 use warnings;
 
@@ -9,6 +18,8 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use JSON;
 use Data::Dumper;
+
+our $VERSION = '0.01';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
