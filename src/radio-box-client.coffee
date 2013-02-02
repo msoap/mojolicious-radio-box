@@ -75,7 +75,7 @@ window.App =
                     <b>#{App.info.tag.title}#{position}</b>
                 """
 
-        if App.info.radio_title && App.info.file.match(/http:\/\//)
+        if App.info.radio_title && App.info.file.match(/https?:\/\//)
             $("#radio_stations").show()
             if App.radio_stations.length
                 App.render_select_radio()
@@ -93,7 +93,7 @@ window.App =
         select_input.options.add(new Option(' - please select station -', ''))
         for item in App.radio_stations
             new_option = new Option(item.title, item.url)
-            if App.info.radio_title && App.info.file.match(/http:\/\//) && App.info.file == item.url
+            if App.info.radio_title && App.info.file.match(/https?:\/\//) && App.info.file == item.url
                 new_option.selected = true
             select_input.options.add(new_option)
 
