@@ -64,7 +64,7 @@ get '/help' => sub {
                      . " "
                      . ($_->{pattern}->{pattern} || "/")
                  }
-                 sort {$a->{pattern}->{pattern} cmp $b->{pattern}->{pattern}}
+                 sort {($a->{pattern}->{pattern} || '') cmp ($b->{pattern}->{pattern} || '')}
                  @{$routes->{children}};
 
     return $self->render_text($result);
