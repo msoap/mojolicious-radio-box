@@ -75,14 +75,14 @@ window.App =
                     <b>#{App.info.tag.title}#{position}</b>
                 """
 
-        if App.info.radio_title || App.info.file.match(/https?:\/\//)
+        if App.info.radio_title || App.info.file? && App.info.file.match(/https?:\/\//)
             $("#radio_stations").show()
             if App.radio_stations.length
                 App.render_select_radio()
             else
                 App.do_get_radio()
 
-        if App.info.volume != undefined
+        if App.info.volume?
             $('input#volume_slider').val(App.info.volume)
 
     # ...........................................
@@ -93,7 +93,7 @@ window.App =
         select_input.options.add(new Option(' - please select station -', ''))
         for item in App.radio_stations
             new_option = new Option(item.title, item.url)
-            if App.info.file.match(/https?:\/\//) && App.info.file == item.url
+            if App.info.file? && App.info.file.match(/https?:\/\//) && App.info.file == item.url
                 new_option.selected = true
             select_input.options.add(new_option)
 
@@ -180,7 +180,7 @@ window.App =
 
         App._change_valume_tid = window.setTimeout(
             () ->
-                if new_volume != undefined && new_volume != App.info.volume
+                if new_volume? && new_volume != App.info.volume
                     App.info.volume = new_volume
                     $("#volume_slider").val(new_volume)
                     $.post '/set_volume'

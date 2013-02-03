@@ -555,7 +555,7 @@ __DATA__
           $("#div_info").html("<b>" + App.info.tag.title + position + "</b>");
         }
       }
-      if (App.info.radio_title || App.info.file.match(/https?:\/\//)) {
+      if (App.info.radio_title || (App.info.file != null) && App.info.file.match(/https?:\/\//)) {
         $("#radio_stations").show();
         if (App.radio_stations.length) {
           App.render_select_radio();
@@ -563,7 +563,7 @@ __DATA__
           App.do_get_radio();
         }
       }
-      if (App.info.volume !== void 0) {
+      if (App.info.volume != null) {
         return $('input#volume_slider').val(App.info.volume);
       }
     },
@@ -577,7 +577,7 @@ __DATA__
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         new_option = new Option(item.title, item.url);
-        if (App.info.file.match(/https?:\/\//) && App.info.file === item.url) {
+        if ((App.info.file != null) && App.info.file.match(/https?:\/\//) && App.info.file === item.url) {
           new_option.selected = true;
         }
         _results.push(select_input.options.add(new_option));
@@ -680,7 +680,7 @@ __DATA__
         return;
       }
       return App._change_valume_tid = window.setTimeout(function() {
-        if (new_volume !== void 0 && new_volume !== App.info.volume) {
+        if ((new_volume != null) && new_volume !== App.info.volume) {
           App.info.volume = new_volume;
           $("#volume_slider").val(new_volume);
           return $.post('/set_volume', {
