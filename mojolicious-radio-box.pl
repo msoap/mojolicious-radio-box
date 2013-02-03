@@ -535,6 +535,9 @@ __DATA__
     update_info: function() {
       return $.get('/get_info', function(info_data) {
         App.info = info_data.info;
+        if (App.info.volume != null) {
+          App.volume = App.info.volume;
+        }
         return App.render_info();
       });
     },
@@ -570,8 +573,8 @@ __DATA__
           App.do_get_radio();
         }
       }
-      if (App.info.volume != null) {
-        return $('input#volume_slider').val(App.info.volume);
+      if (App.volume != null) {
+        return $('input#volume_slider').val(App.volume);
       }
     },
     render_select_radio: function() {
@@ -671,13 +674,13 @@ __DATA__
         App._change_valume_tid = void 0;
       }
       new_volume = 0;
-      if (event.data.up) {
-        new_volume = App.info.volume + event.data.up;
+      if (event.data.up && (App.volume != null)) {
+        new_volume = App.volume + event.data.up;
         if (new_volume > 100) {
           new_volume = 100;
         }
-      } else if (event.data.down) {
-        new_volume = App.info.volume - event.data.down;
+      } else if (event.data.down && (App.volume != null)) {
+        new_volume = App.volume - event.data.down;
         if (new_volume < 0) {
           new_volume = 0;
         }
@@ -687,8 +690,8 @@ __DATA__
         return;
       }
       return App._change_valume_tid = window.setTimeout(function() {
-        if ((new_volume != null) && new_volume !== App.info.volume) {
-          App.info.volume = new_volume;
+        if ((new_volume != null) && new_volume !== App.volume) {
+          App.volume = new_volume;
           $("#volume_slider").val(new_volume);
           return $.post('/set_volume', {
             volume: new_volume

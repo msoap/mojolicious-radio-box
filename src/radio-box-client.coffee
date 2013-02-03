@@ -34,6 +34,7 @@ window.App =
     update_info: ->
         $.get '/get_info', (info_data) ->
             App.info = info_data.info
+            App.volume = App.info.volume if App.info.volume?
             App.render_info()
 
     # ...........................................
@@ -82,8 +83,8 @@ window.App =
             else
                 App.do_get_radio()
 
-        if App.info.volume?
-            $('input#volume_slider').val(App.info.volume)
+        if App.volume?
+            $('input#volume_slider').val(App.volume)
 
     # ...........................................
     render_select_radio: ->
@@ -167,11 +168,11 @@ window.App =
             App._change_valume_tid = undefined
 
         new_volume = 0
-        if event.data.up
-            new_volume = App.info.volume + event.data.up
+        if event.data.up && App.volume?
+            new_volume = App.volume + event.data.up
             new_volume = 100 if new_volume > 100
-        else if event.data.down
-            new_volume = App.info.volume - event.data.down
+        else if event.data.down && App.volume?
+            new_volume = App.volume - event.data.down
             new_volume = 0 if new_volume < 0
         else if event.data.absolute
             new_volume = parseInt($("#volume_slider").val())
@@ -180,8 +181,8 @@ window.App =
 
         App._change_valume_tid = window.setTimeout(
             () ->
-                if new_volume? && new_volume != App.info.volume
-                    App.info.volume = new_volume
+                if new_volume? && new_volume != App.volume
+                    App.volume = new_volume
                     $("#volume_slider").val(new_volume)
                     $.post '/set_volume'
                         volume: new_volume
