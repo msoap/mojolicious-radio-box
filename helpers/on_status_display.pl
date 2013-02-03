@@ -17,7 +17,7 @@ use JSON;
 sub main {
     my %params = @ARGV;
 
-    open my $FH, '>', "$ENV{HOME}/.cmus/last_track.txt" or die "Error open file: $!\n";
+    open my $FH, '>', "$ENV{HOME}/.cmus/last_track.json" or die "Error open file: $!\n";
     print $FH to_json(\%params) . "\n";
     close $FH;
 }
