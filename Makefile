@@ -5,7 +5,13 @@ build:
 	chmod a+x mojolicious-radio-box.pl
 
 test-syntax:
-	perl -c mojolicious-radio-box.pl
+	perl -c ./mojolicious-radio-box.pl
 
 run:
-	./mojolicious-radio-box.pl
+	morbo --listen 'http://*:8080' ./mojolicious-radio-box.pl
+
+run-prod:
+	hypnotoad ./mojolicious-radio-box.pl
+
+stop-prod:
+	hypnotoad --stop ./mojolicious-radio-box.pl

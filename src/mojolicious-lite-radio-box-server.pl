@@ -39,6 +39,13 @@ our %OPTIONS = (
 # go ---------------------------------------------------------------------------
 init();
 app
+    ->config(
+        hypnotoad => {
+            listen => ['http://*:8080'],
+            workers => 2,
+            accept_interval => 0.7,
+        }
+    )
     ->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')
     ->start('daemon', '--listen=http://*:8080', @ARGV);
 
