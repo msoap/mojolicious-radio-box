@@ -184,8 +184,7 @@ window.App =
                 if new_volume? && new_volume != App.volume
                     App.volume = new_volume
                     $("#volume_slider").val(new_volume)
-                    $.post '/set_volume'
-                        volume: new_volume
+                    $.post '/set_volume/' + new_volume
             200
         )
 # .............................................................................

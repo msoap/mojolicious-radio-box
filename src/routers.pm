@@ -46,7 +46,8 @@ get '/get_music' => sub {
     return $self->render_json({status => 'ok', info => cmus_get_music()});
 };
 
-post '/set_volume' => sub {
+# curl -s -d '' 'http://localhost:8080/set_volume/20'
+post '/set_volume/:volume' => [volume => qr/\d+/] => sub {
     my $self = shift;
 
     my $volume = $self->param("volume");

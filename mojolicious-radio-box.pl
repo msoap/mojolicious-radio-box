@@ -355,7 +355,8 @@ get '/get_music' => sub {
     return $self->render_json({status => 'ok', info => cmus_get_music()});
 };
 
-post '/set_volume' => sub {
+# curl -s -d '' 'http://localhost:8080/set_volume/20'
+post '/set_volume/:volume' => [volume => qr/\d+/] => sub {
     my $self = shift;
 
     my $volume = $self->param("volume");
@@ -693,9 +694,7 @@ __DATA__
         if ((new_volume != null) && new_volume !== App.volume) {
           App.volume = new_volume;
           $("#volume_slider").val(new_volume);
-          return $.post('/set_volume', {
-            volume: new_volume
-          });
+          return $.post('/set_volume/' + new_volume);
         }
       }, 200);
     }
