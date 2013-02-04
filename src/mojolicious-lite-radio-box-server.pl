@@ -25,6 +25,9 @@ our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
     last_track_file => "$ENV{HOME}/.cmus/last_track.json",
     playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
+    listen_address => 'http://*:8080',
+    hypnotoad_workers => 2,
+    hypnotoad_accept_interval => 0.7,
 );
 
 # ------------------------------------------------------------------------------
@@ -41,13 +44,13 @@ init();
 app
     ->config(
         hypnotoad => {
-            listen => ['http://*:8080'],
-            workers => 2,
-            accept_interval => 0.7,
+            listen => [$OPTIONS{listen_address}],
+            workers => $OPTIONS{hypnotoad_workers},
+            accept_interval => $OPTIONS{hypnotoad_accept_interval},
         }
     )
     ->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')
-    ->start('daemon', '--listen=http://*:8080', @ARGV);
+    ->start(@ARGV ? @ARGV : ("daemon", "--listen=$OPTIONS{listen_address}"));
 
 __DATA__
 @@ index.html.ep

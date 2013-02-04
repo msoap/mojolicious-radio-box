@@ -1,0 +1,12 @@
+# config for mojolicious-radio-box.pl server
+# place this file into ~/.cmus/mojolicious-radio-box.ini
+
+# dir with m2u/pls playlist for internet radio
+radio_playlist_dir = ~/Music/radio
+
+# host and port for http server
+listen_address = http://*:8080
+
+# settings for hypnotoad server
+hypnotoad_workers = 3
+hypnotoad_accept_interval = 0.3
