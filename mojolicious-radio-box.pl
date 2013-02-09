@@ -26,8 +26,8 @@ our %OPTIONS = (
     last_track_file => "$ENV{HOME}/.cmus/last_track.json",
     playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
     listen_address => 'http://*:8080',
-    hypnotoad_workers => 2,
-    hypnotoad_accept_interval => 0.7,
+    hypnotoad_workers => 5,
+    hypnotoad_accept_interval => 0.1,
 );
 
 # ------------------------------------------------------------------------------
