@@ -14,6 +14,9 @@ sub init {
     }
 
     $OPTIONS{is_mac} = 1 if $^O eq 'darwin';
+    $OPTIONS{is_linux} = 1 if $^O eq 'linux';
+    $OPTIONS{is_pulseaudio} = 1 if $OPTIONS{is_linux} && `pacmd --version` =~ m/^pacmd\s+\d+/;
+    $OPTIONS{is_alsa} = 1 if $OPTIONS{is_linux} && `amixer --version` =~ m/^amixer\s+version\s+\d+/;
 }
 
 # ------------------------------------------------------------------------------
