@@ -227,5 +227,9 @@ sub _cmus_parse_info {
         }
     }
 
+    if ($result->{set}->{softvol} && $result->{set}->{vol_left} >= 0 && $result->{set}->{vol_right} >= 0) {
+        $result->{soft_volume} = int(($result->{set}->{vol_left} + $result->{set}->{vol_right}) / 2);
+    }
+
     return $result;
 }
