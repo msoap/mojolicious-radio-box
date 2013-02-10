@@ -23,7 +23,7 @@ our $VERSION = '0.01';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
-    last_track_file => "$ENV{HOME}/.cmus/last_track.json",
+    last_track_file => "$ENV{HOME}/.cmus/last_track.tsv",
     playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
     listen_address => 'http://*:8080',
     hypnotoad_workers => 5,
@@ -130,7 +130,12 @@ sub cmus_get_info {
        )
     {
         open my $FH, '<', $OPTIONS{last_track_file} or die "Error open file: $!\n";
-        my $add_info = eval{from_json(join("", <$FH>))} || {};
+        my $add_info = {};
+        while (my $line = <$FH>) {
+            chomp $line;
+            my ($key, $value) = split "\t", $line, 2;
+            $add_info->{$key} = $value if length($key) > 0;
+        }
         $info->{radio_title} = $add_info->{title} if $add_info->{title};
         close $FH;
     }

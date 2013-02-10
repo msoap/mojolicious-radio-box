@@ -27,7 +27,12 @@ sub cmus_get_info {
        )
     {
         open my $FH, '<', $OPTIONS{last_track_file} or die "Error open file: $!\n";
-        my $add_info = eval{from_json(join("", <$FH>))} || {};
+        my $add_info = {};
+        while (my $line = <$FH>) {
+            chomp $line;
+            my ($key, $value) = split "\t", $line, 2;
+            $add_info->{$key} = $value if length($key) > 0;
+        }
         $info->{radio_title} = $add_info->{title} if $add_info->{title};
         close $FH;
     }

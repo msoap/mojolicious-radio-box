@@ -23,7 +23,7 @@ our $VERSION = '0.01';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
-    last_track_file => "$ENV{HOME}/.cmus/last_track.json",
+    last_track_file => "$ENV{HOME}/.cmus/last_track.tsv",
     playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
     listen_address => 'http://*:8080',
     hypnotoad_workers => 5,

@@ -11,14 +11,14 @@ and change ~/.cmus/autosave:
 use strict;
 use warnings;
 
-use JSON;
-
 # ------------------------------------------------------------------------------
 sub main {
     my %params = @ARGV;
 
-    open my $FH, '>', "$ENV{HOME}/.cmus/last_track.json" or die "Error open file: $!\n";
-    print $FH to_json(\%params) . "\n";
+    open my $FH, '>', "$ENV{HOME}/.cmus/last_track.tsv" or die "Error open file: $!\n";
+    for my $key (keys %params) {
+        print $FH "$key\t$params{$key}\n";
+    }
     close $FH;
 }
 
