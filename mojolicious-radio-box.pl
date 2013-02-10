@@ -480,8 +480,8 @@ __DATA__
           display: none;
       }
       input#volume_slider {
-          margin: 7px 10px;
-          width: 150px;
+          margin: 7px 7px;
+          width: 165px;
       }
       .volume-buttons {
           width: 50px;
@@ -489,8 +489,13 @@ __DATA__
           top: -3px;
           font-size: 10pt;
           border: 1px solid #888;
-          border-radius: 5px;
           background-color: #eee;
+      }
+      #volume_down {
+          border-radius: 15px 3px 3px 15px;
+      }
+      #volume_up {
+          border-radius: 3px 15px 15px 3px;
       }
   </style>
   <link rel="stylesheet" href="/font-awesome.css">
