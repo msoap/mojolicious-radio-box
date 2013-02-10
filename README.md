@@ -1,8 +1,8 @@
-Mojolicious radio box
-=====================
+Mojolicious radio box for Raspberry Pi
+======================================
 
 Small web application for control radio/music player (cmus).
-It can be run on a server/desktop/raspberry pi.
+It can be run on a raspberry pi, server or desktop.
 
 INSTALL
 -------
@@ -20,7 +20,11 @@ RUN
 ---
 
     ./mojolicious-radio-box.pl
-    open http://localhost:8080/
+    # or run as daemon:
+    hypnotoad ./mojolicious-radio-box.pl
+
+    # and open in your browser:
+    open http://hostname:8080/
 
 SCREENSHOTS
 -----------
@@ -36,8 +40,7 @@ iPad:
 LINKS
 -----
 
- * [cmus player](http://cmus.sourceforge.net)
- * [cmus player github](https://github.com/cmus/cmus)
+ * [cmus player](http://cmus.sourceforge.net) ([github](https://github.com/cmus/cmus))
  * [Mojolicious framework](http://mojolicio.us/)
  * [Raspberry Pi](http://www.raspberrypi.org)
 
