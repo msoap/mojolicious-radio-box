@@ -29,17 +29,18 @@ RUN
 SCREENSHOTS
 -----------
 
-Mac OS X dashboard:
-
-![Mac OS X dashboard](http://msoap.github.com/img/mrb-screenshot-dashboard.png)
-
 iPad:
 
-![iPad](http://msoap.github.com/img/mrb-screenshot-ipad.png)
+![iPad](http://msoap.github.com/mojolicious-radio-box/img/rpi_ipad_screenshot.png)
+
+Mac OS X dashboard:
+
+![Mac OS X dashboard](http://msoap.github.com/mojolicious-radio-box/img/rpi_dashboard_screenshot.png)
 
 LINKS
 -----
 
+ * [Home page](http://msoap.github.com/mojolicious-radio-box/)
  * [cmus player](http://cmus.sourceforge.net) ([github](https://github.com/cmus/cmus))
  * [Mojolicious framework](http://mojolicio.us/)
  * [Raspberry Pi](http://www.raspberrypi.org)
