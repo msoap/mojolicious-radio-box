@@ -8,7 +8,6 @@ INSTALL
 -------
 
     cpan Mojolicious
-    cpan JSON
     
     brew install cmus
     # or

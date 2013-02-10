@@ -16,7 +16,6 @@ use utf8;
 use open qw/:std :utf8/;
 
 use Mojolicious::Lite;
-use JSON;
 use Data::Dumper;
 
 our $VERSION = '0.01';
