@@ -17,4 +17,4 @@ stop-prod:
 deploy:
 	# add before: git remote add raspberrypi ssh://raspberrypi.local/home/user/path_to.../mojolicious-radio-box
 	# and change config on RPi repo: git config receive.denyCurrentBranch ignore
-	git push raspberrypi --force
+	git push raspberrypi
