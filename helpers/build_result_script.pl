@@ -20,6 +20,7 @@ sub main {
             my $cmd = $1;
             if ($cmd =~ /\s/) {
                 $cmd =~ s/^base64 /base64 -b 80 / if $^O eq 'darwin'; # Mac OS specific
+                $cmd =~ s/^base64 /base64 -w 80 / if $^O eq 'linux'; # linux specific
                 print `$cmd`;
             } else {
                 print `cat $cmd`;
