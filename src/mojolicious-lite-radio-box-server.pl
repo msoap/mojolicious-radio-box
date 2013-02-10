@@ -66,16 +66,16 @@ __DATA__
 
 
 @@ fontawesome-webfont.eot (base64)
-#<<< base64 -b 80 src/static/fontawesome-webfont.eot
+#<<< base64 src/static/fontawesome-webfont.eot
 
 @@ fontawesome-webfont.woff (base64)
-#<<< base64 -b 80 src/static/fontawesome-webfont.woff
+#<<< base64 src/static/fontawesome-webfont.woff
 
 @@ fontawesome-webfont.ttf (base64)
-#<<< base64 -b 80 src/static/fontawesome-webfont.ttf
+#<<< base64 src/static/fontawesome-webfont.ttf
 
 @@ apple-touch-icon.png (base64)
-#<<< base64 -b 80 src/static/apple-touch-icon-144x144.png
+#<<< base64 src/static/apple-touch-icon-144x144.png
 
 @@ apple-touch-icon-144x144.png (base64)
-#<<< base64 -b 80 src/static/apple-touch-icon-144x144.png
+#<<< base64 src/static/apple-touch-icon-144x144.png

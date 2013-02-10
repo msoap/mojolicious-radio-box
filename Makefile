@@ -1,7 +1,5 @@
 build:
-	cat src/mojolicious-lite-radio-box-server.pl \
-	  | perl -ne 'if (m/^ \s* \#<<< \s* (.+) \s* $$/x) {my $$cmd = $$1; $$cmd = "cat $$cmd" unless $$cmd =~ /\s/; print `$$cmd`} else {print}' \
-	  > mojolicious-radio-box.pl
+	cat ./src/mojolicious-lite-radio-box-server.pl | ./helpers/build_result_script.pl > ./mojolicious-radio-box.pl
 	chmod a+x mojolicious-radio-box.pl
 
 test-syntax:
