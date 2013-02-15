@@ -53,10 +53,10 @@ window.App =
                            " (" + App.format_track_time(parseInt(App.info.position)) + ")"
                        else
                            ""
-            if App.info.radio_title
+            if App.info.stream
                 $("#div_info").html """
                     #{App.info.tag.title}<br>
-                    <b>#{App.info.radio_title}#{position}</b>
+                    <b>#{App.info.stream}#{position}</b>
                 """
 
             else if App.info.tag.artist && App.info.tag.album
@@ -76,7 +76,7 @@ window.App =
                     <b>#{App.info.tag.title}#{position}</b>
                 """
 
-        if App.info.radio_title || App.info.file? && App.info.file.match(/https?:\/\//)
+        if App.info.stream || App.info.file? && App.info.file.match(/https?:\/\//)
             $("#radio_stations").show()
             if App.radio_stations.length
                 App.render_select_radio()
@@ -112,7 +112,7 @@ window.App =
     # events ....................................
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
-        if App.info.duration > 0 && ! App.info.radio_title
+        if App.info.duration > 0
             $.post '/pause', (info_data) ->
                 App.info = info_data.info
                 App.render_info()

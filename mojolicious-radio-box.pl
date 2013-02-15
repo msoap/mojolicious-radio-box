@@ -122,7 +122,8 @@ sub cmus_get_info {
     my $info = _cmus_parse_info(`cmus-remote --query`);
 
     # for internet-radio get title from file
-    if ($info->{status}
+    if (! exists $info->{stream}
+        && $info->{status}
         && $info->{status} eq 'playing'
         && ($info->{duration} == -1 || $info->{file} =~ m[^https?://])
         && -r $OPTIONS{last_track_file}
@@ -135,7 +136,7 @@ sub cmus_get_info {
             my ($key, $value) = split "\t", $line, 2;
             $add_info->{$key} = $value if length($key) > 0;
         }
-        $info->{radio_title} = $add_info->{title} if $add_info->{title};
+        $info->{stream} = $add_info->{title} if $add_info->{title};
         close $FH;
     }
 
@@ -591,8 +592,8 @@ __DATA__
       }
       if (App.info.tag) {
         position = parseInt(App.info.position) > 0 ? " (" + App.format_track_time(parseInt(App.info.position)) + ")" : "";
-        if (App.info.radio_title) {
-          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.radio_title + position + "</b>");
+        if (App.info.stream) {
+          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.stream + position + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
           duration = parseInt(App.info.duration) > 0 ? " (" + App.format_track_time(parseInt(App.info.duration)) + ")" : "";
           $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + duration + "</b>");
@@ -601,7 +602,7 @@ __DATA__
           $("#div_info").html("<b>" + App.info.tag.title + position + "</b>");
         }
       }
-      if (App.info.radio_title || (App.info.file != null) && App.info.file.match(/https?:\/\//)) {
+      if (App.info.stream || (App.info.file != null) && App.info.file.match(/https?:\/\//)) {
         $("#radio_stations").show();
         if (App.radio_stations.length) {
           App.render_select_radio();
@@ -649,7 +650,7 @@ __DATA__
     },
     do_pause: function() {
       $("#bt_pause").attr('disabled', 'disabled');
-      if (App.info.duration > 0 && !App.info.radio_title) {
+      if (App.info.duration > 0) {
         return $.post('/pause', function(info_data) {
           App.info = info_data.info;
           return App.render_info();

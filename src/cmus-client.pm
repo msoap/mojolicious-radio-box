@@ -20,7 +20,8 @@ sub cmus_get_info {
     my $info = _cmus_parse_info(`cmus-remote --query`);
 
     # for internet-radio get title from file
-    if ($info->{status}
+    if (! exists $info->{stream}
+        && $info->{status}
         && $info->{status} eq 'playing'
         && ($info->{duration} == -1 || $info->{file} =~ m[^https?://])
         && -r $OPTIONS{last_track_file}
@@ -33,7 +34,7 @@ sub cmus_get_info {
             my ($key, $value) = split "\t", $line, 2;
             $add_info->{$key} = $value if length($key) > 0;
         }
-        $info->{radio_title} = $add_info->{title} if $add_info->{title};
+        $info->{stream} = $add_info->{title} if $add_info->{title};
         close $FH;
     }
 
