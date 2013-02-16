@@ -52,7 +52,7 @@ sub init {
 
     # get default sound card for pulseaudio
     if ($OPTIONS{is_pulseaudio} && ! defined $OPTIONS{"pa-default-sink"}) {
-        $OPTIONS{"pa-default-sink"} = `pacmd dump | grep set-default-sink | awk '{print $2}'`;
+        $OPTIONS{"pa-default-sink"} = `pacmd dump | grep set-default-sink | awk '{print \$2}'`;
         $OPTIONS{"pa-default-sink"} = "0" unless defined $OPTIONS{"pa-default-sink"} && length($OPTIONS{"pa-default-sink"}) > 0;
     }
 }
