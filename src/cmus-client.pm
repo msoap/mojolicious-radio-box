@@ -41,7 +41,7 @@ sub cmus_get_info {
     if ($OPTIONS{is_mac}) {
         $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
     } elsif ($OPTIONS{is_pulseaudio}) {
-        my ($pa_info) = grep {/set-sink-volume/} `pacmd dump`;
+        my ($pa_info) = grep {/set-sink-volume/ && /\Q$OPTIONS{"pa-default-sink"}\E/} `pacmd dump`;
         $pa_info =~ /\s+ ([0-9a-fx]+) \s* $/xi;
         if (defined $1 && hex($1) >= 0) {
             $info->{volume} = int(sprintf("%0.0f", hex($1) / 65536 * 100));
@@ -195,7 +195,7 @@ sub cmus_set_volume {
     if ($OPTIONS{is_mac}) {
         system("osascript", "-e", "set volume output volume $volume");
     } elsif ($OPTIONS{is_pulseaudio}) {
-        system("pactl", "set-sink-volume", "0", "${volume}%");
+        system("pactl", "set-sink-volume", $OPTIONS{"pa-default-sink"}, "${volume}%");
     } elsif ($OPTIONS{is_alsa}) {
         system("amixer", "-q", "set", "Master", "${volume}%");
     }

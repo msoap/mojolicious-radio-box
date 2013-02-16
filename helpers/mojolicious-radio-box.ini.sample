@@ -10,3 +10,7 @@ listen_address = http://*:8080
 # settings for hypnotoad server
 hypnotoad_workers = 3
 hypnotoad_accept_interval = 0.3
+
+# PulseAudio settings
+# if sound-card dont autodetect, uncomment this and set your soundcard id
+# pa-default-sink = 0

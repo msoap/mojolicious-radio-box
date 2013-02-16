@@ -17,6 +17,12 @@ sub init {
     $OPTIONS{is_linux} = 1 if $^O eq 'linux';
     $OPTIONS{is_pulseaudio} = 1 if $OPTIONS{is_linux} && `pacmd --version` =~ m/^pacmd\s+\d+/;
     $OPTIONS{is_alsa} = 1 if $OPTIONS{is_linux} && `amixer --version` =~ m/^amixer\s+version\s+\d+/;
+
+    # get default sound card for pulseaudio
+    if ($OPTIONS{is_pulseaudio} && ! defined $OPTIONS{"pa-default-sink"}) {
+        $OPTIONS{"pa-default-sink"} = `pacmd dump | grep set-default-sink | awk '{print $2}'`;
+        $OPTIONS{"pa-default-sink"} = "0" unless defined $OPTIONS{"pa-default-sink"} && length($OPTIONS{"pa-default-sink"}) > 0;
+    }
 }
 
 # ------------------------------------------------------------------------------
