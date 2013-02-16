@@ -53,7 +53,11 @@ sub init {
     # get default sound card for pulseaudio
     if ($OPTIONS{is_pulseaudio} && ! defined $OPTIONS{"pa-default-sink"}) {
         $OPTIONS{"pa-default-sink"} = `pacmd dump | grep set-default-sink | awk '{print \$2}'`;
-        $OPTIONS{"pa-default-sink"} = "0" unless defined $OPTIONS{"pa-default-sink"} && length($OPTIONS{"pa-default-sink"}) > 0;
+        if (defined $OPTIONS{"pa-default-sink"} && length($OPTIONS{"pa-default-sink"}) > 0) {
+            chomp $OPTIONS{"pa-default-sink"};
+        } else {
+            $OPTIONS{"pa-default-sink"} = "0";
+        }
     }
 }
 
@@ -150,9 +154,11 @@ sub cmus_get_info {
         $info->{volume} = int(`osascript -e "output volume of (get volume settings)"`);
     } elsif ($OPTIONS{is_pulseaudio}) {
         my ($pa_info) = grep {/set-sink-volume/ && /\Q$OPTIONS{"pa-default-sink"}\E/} `pacmd dump`;
-        $pa_info =~ /\s+ ([0-9a-fx]+) \s* $/xi;
-        if (defined $1 && hex($1) >= 0) {
-            $info->{volume} = int(sprintf("%0.0f", hex($1) / 65536 * 100));
+        if (defined $pa_info) {
+            $pa_info =~ /\s+ ([0-9a-fx]+) \s* $/xi;
+            if (defined $1 && hex($1) >= 0) {
+                $info->{volume} = int(sprintf("%0.0f", hex($1) / 65536 * 100));
+            }
         }
     } elsif ($OPTIONS{is_alsa}) {
         my $alsa_info = join "#", grep {/Front\s+(Left|Right):\s+Playback/} `amixer get Master`;
