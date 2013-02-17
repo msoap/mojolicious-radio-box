@@ -1,0 +1,56 @@
+h1 {
+    font-size: 80%;
+}
+button.nav_buttons {
+    width: 95px;
+    height: 30px;
+    top: 5px;
+    font-size: 10pt;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background-color: #eee;
+    box-shadow: 2px 2px 5px #888;
+}
+button.nav_buttons:hover {
+    box-shadow: 2px 2px 6px #519BB6;
+}
+button.nav_buttons i {
+    font-size: 95%;
+}
+#div_info {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: sans-serif;
+    font-size: 90%;
+}
+#div_error {
+    color: red;
+    display: none;
+    font-family: sans-serif;
+    margin-top: 10px;
+}
+#bt_get_radio, #bt_get_music {
+    width: 130px;
+}
+#radio_stations {
+    width: 170px;
+    display: none;
+}
+input#volume_slider {
+    margin: 7px 7px;
+    width: 165px;
+}
+.volume-buttons {
+    width: 50px;
+    position: relative;
+    top: -3px;
+    font-size: 10pt;
+    border: 1px solid #888;
+    background-color: #eee;
+}
+#volume_down {
+    border-radius: 15px 3px 3px 15px;
+}
+#volume_up {
+    border-radius: 3px 15px 15px 3px;
+}

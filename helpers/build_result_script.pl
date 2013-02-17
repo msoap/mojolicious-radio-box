@@ -23,7 +23,7 @@ sub main {
                 $cmd =~ s/^base64 /base64 -w 80 / if $^O eq 'linux'; # linux specific
                 print `$cmd`;
             } else {
-                print `cat $cmd`;
+                print `cat $cmd | $0`;
             }
         } else {
             print $line;
