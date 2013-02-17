@@ -58,13 +58,6 @@ __DATA__
 @@ not_found.html.ep
 <h1>404</h1>
 
-@@ script.js
-#<<< coffee -p src/radio-box-client.coffee
-
-@@ font-awesome.css
-#<<< src/static/font-awesome.min.css
-
-
 @@ fontawesome-webfont.eot (base64)
 #<<< base64 src/static/fontawesome-webfont.eot
 
