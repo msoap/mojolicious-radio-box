@@ -76,33 +76,45 @@ sub get_radio_stations {
     my $result = [];
 
     if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
-        for my $m3u_file (glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
+        for my $playlist_file (glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
 
-            my ($title_from_name, $ext) = $m3u_file =~ m{([^/]+)\.(m3u|pls)$};
+            my ($title_from_name, $ext) = $playlist_file =~ m{([^/]+)\.(m3u|pls)$};
             $title_from_name =~ s/_/ /g;
             my ($title, $url);
 
-            open my $FH, '<', $m3u_file or die "Error open file: $!\n";
+            open my $FH, '<', $playlist_file or die "Error open file: $!\n";
 
+            my %pls;
             while (my $line = <$FH>) {
                 chomp $line;
 
                 if ($ext eq 'm3u') {
+
                     $title = $1 if ! $title && $line =~ /^\#EXTINF: -?\d+, (.+?) \s* $/x;
                     if (! $url && $line =~ m{^http://}) {
                         $url = $line;
                         $url =~ s/\s+//g;
                     }
-                    last if $title && $url;
+                    if ($url) {
+                        push @$result, {title => $title || $title_from_name, url => $url};
+                        ($url, $title) = (undef, undef);
+                    }
+
                 } elsif ($ext eq 'pls') {
-                    $title = $1 if $line =~ m{^Title\d+=(.+)\s*$};
-                    $url   = $1 if $line =~ m{^File\d+=(http://.+?)\s*$};
-                    last if $url && $title;
+
+                    $pls{$1}->{title} = $title = $2 if $line =~ m{^Title(\d+)=(.+)\s*$};
+                    $pls{$1}->{url} = $2 if $line =~ m{^File(\d+)=(http?://.+?)\s*$};
+
                 }
             }
 
+            for my $i (sort {$a <=> $b} keys %pls) {
+                push @$result, {title => $pls{$i}->{title} || $title_from_name
+                                , url => $pls{$i}->{url}
+                               } if $pls{$i}->{url};
+            }
+
             close $FH;
-            push @$result, {title => $title || $title_from_name, url => $url} if $url && ($title || $title_from_name);
         }
     }
 
