@@ -91,7 +91,7 @@ sub get_radio_stations {
                 if ($ext eq 'm3u') {
 
                     $title = $1 if ! $title && $line =~ /^\#EXTINF: -?\d+, (.+?) \s* $/x;
-                    if (! $url && $line =~ m{^http://}) {
+                    if (! $url && $line =~ m{^https?://}) {
                         $url = $line;
                         $url =~ s/\s+//g;
                     }
@@ -103,7 +103,7 @@ sub get_radio_stations {
                 } elsif ($ext eq 'pls') {
 
                     $pls{$1}->{title} = $title = $2 if $line =~ m{^Title(\d+)=(.+)\s*$};
-                    $pls{$1}->{url} = $2 if $line =~ m{^File(\d+)=(http?://.+?)\s*$};
+                    $pls{$1}->{url} = $2 if $line =~ m{^File(\d+)=(https?://.+?)\s*$};
 
                 }
             }
