@@ -155,11 +155,12 @@ window.App =
     # ...........................................
     do_select_radio: (event) ->
         if event.target.value
-            $.post '/play_radio'
+            $.post('/play_radio'
                 url: event.target.value
                 (info_data) ->
                     App.info = info_data.info
                     App.render_info()
+            )
 
     # ...........................................
     do_change_volume: (event) ->
