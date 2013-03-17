@@ -32,7 +32,7 @@ window.App =
 
     # ...........................................
     update_info: ->
-        $.get '/get_info', (info_data) ->
+        $.get 'get_info', (info_data) ->
             App.info = info_data.info
             App.volume = App.info.volume if App.info.volume?
             App.render_info()
@@ -113,49 +113,49 @@ window.App =
     do_pause: ->
         $("#bt_pause").attr('disabled', 'disabled')
         if App.info.duration > 0
-            $.post '/pause', (info_data) ->
+            $.post 'pause', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
         else if App.info.status == 'playing'
-            $.post '/stop', (info_data) ->
+            $.post 'stop', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
         else if App.info.status == 'stopped'
-            $.post '/play', (info_data) ->
+            $.post 'play', (info_data) ->
                 App.info = info_data.info
                 App.render_info()
 
     # ...........................................
     do_next: ->
         $("#bt_next").attr('disabled', 'disabled')
-        $.post '/next', (info_data) ->
+        $.post 'next', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     # ...........................................
     do_prev: ->
         $("#bt_prev").attr('disabled', 'disabled')
-        $.post '/prev', (info_data) ->
+        $.post 'prev', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     # ...........................................
     do_get_radio: ->
-        $.get '/get_radio', (result) ->
+        $.get 'get_radio', (result) ->
             $("#radio_stations").show()
             App.radio_stations = result.radio_stations;
             App.render_select_radio()
 
     # ...........................................
     do_get_music: ->
-        $.get '/get_music', (info_data) ->
+        $.get 'get_music', (info_data) ->
             App.info = info_data.info
             App.render_info()
 
     # ...........................................
     do_select_radio: (event) ->
         if event.target.value
-            $.post('/play_radio'
+            $.post('play_radio'
                 url: event.target.value
                 (info_data) ->
                     App.info = info_data.info
@@ -185,7 +185,7 @@ window.App =
                 if new_volume? && new_volume != App.volume
                     App.volume = new_volume
                     $("#volume_slider").val(new_volume)
-                    $.post '/set_volume/' + new_volume
+                    $.post 'set_volume/' + new_volume
             200
         )
 # .............................................................................

@@ -467,7 +467,7 @@ __DATA__
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.3, maximum-scale=2.0, user-scalable=yes"/>
   <title>Mojolicious radio box</title>
-  <script src="/mojo/jquery/jquery.js"></script>
+  <script src="mojo/jquery/jquery.js"></script>
   <script>
   // generated from coffee-script source
 (function() {
@@ -509,7 +509,7 @@ __DATA__
       }
     },
     update_info: function() {
-      return $.get('/get_info', function(info_data) {
+      return $.get('get_info', function(info_data) {
         App.info = info_data.info;
         if (App.info.volume != null) {
           App.volume = App.info.volume;
@@ -590,17 +590,17 @@ __DATA__
     do_pause: function() {
       $("#bt_pause").attr('disabled', 'disabled');
       if (App.info.duration > 0) {
-        return $.post('/pause', function(info_data) {
+        return $.post('pause', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
       } else if (App.info.status === 'playing') {
-        return $.post('/stop', function(info_data) {
+        return $.post('stop', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
       } else if (App.info.status === 'stopped') {
-        return $.post('/play', function(info_data) {
+        return $.post('play', function(info_data) {
           App.info = info_data.info;
           return App.render_info();
         });
@@ -608,34 +608,34 @@ __DATA__
     },
     do_next: function() {
       $("#bt_next").attr('disabled', 'disabled');
-      return $.post('/next', function(info_data) {
+      return $.post('next', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_prev: function() {
       $("#bt_prev").attr('disabled', 'disabled');
-      return $.post('/prev', function(info_data) {
+      return $.post('prev', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_get_radio: function() {
-      return $.get('/get_radio', function(result) {
+      return $.get('get_radio', function(result) {
         $("#radio_stations").show();
         App.radio_stations = result.radio_stations;
         return App.render_select_radio();
       });
     },
     do_get_music: function() {
-      return $.get('/get_music', function(info_data) {
+      return $.get('get_music', function(info_data) {
         App.info = info_data.info;
         return App.render_info();
       });
     },
     do_select_radio: function(event) {
       if (event.target.value) {
-        return $.post('/play_radio', {
+        return $.post('play_radio', {
           url: event.target.value
         }, function(info_data) {
           App.info = info_data.info;
@@ -669,7 +669,7 @@ __DATA__
         if ((new_volume != null) && new_volume !== App.volume) {
           App.volume = new_volume;
           $("#volume_slider").val(new_volume);
-          return $.post('/set_volume/' + new_volume);
+          return $.post('set_volume/' + new_volume);
         }
       }, 200);
     }
@@ -708,10 +708,10 @@ __DATA__
 
 @font-face{
   font-family:'FontAwesome';
-  src:url('/fontawesome-webfont.eot?v=3.0.1');
-  src:url('/fontawesome-webfont.eot?#iefix&v=3.0.1') format('embedded-opentype'),
-  url('/fontawesome-webfont.woff?v=3.0.1') format('woff'),
-  url('/fontawesome-webfont.ttf?v=3.0.1') format('truetype');
+  src:url('fontawesome-webfont.eot?v=3.0.1');
+  src:url('fontawesome-webfont.eot?#iefix&v=3.0.1') format('embedded-opentype'),
+  url('fontawesome-webfont.woff?v=3.0.1') format('woff'),
+  url('fontawesome-webfont.ttf?v=3.0.1') format('truetype');
   font-weight:normal;
   font-style:normal }
 
