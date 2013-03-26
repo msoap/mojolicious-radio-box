@@ -471,7 +471,6 @@ __DATA__
   <script>
   // generated from coffee-script source
 (function() {
-
   window.App = {
     info: {
       status: "-",
@@ -519,6 +518,7 @@ __DATA__
     },
     render_info: function() {
       var duration, position;
+
       $("button.nav_buttons").removeAttr('disabled');
       if (App.info.status === 'playing') {
         $("#bt_pause").html('<i class="icon-pause">&nbsp;&nbsp;pause');
@@ -555,6 +555,7 @@ __DATA__
     },
     render_select_radio: function() {
       var item, new_option, select_input, _i, _len, _ref, _results;
+
       select_input = $('#radio_stations')[0];
       select_input.options.length = 0;
       select_input.options.add(new Option(' - please select station -', ''));
@@ -572,6 +573,7 @@ __DATA__
     },
     format_track_time: function(all_seconds) {
       var hours, minutes, result, seconds;
+
       hours = Math.floor(all_seconds / 3600);
       minutes = Math.floor((all_seconds - hours * 3600) / 60);
       seconds = (all_seconds - hours * 3600 - minutes * 60) % 60;
@@ -645,6 +647,7 @@ __DATA__
     },
     do_change_volume: function(event) {
       var new_volume;
+
       if (App._change_valume_tid) {
         window.clearTimeout(App._change_valume_tid);
         App._change_valume_tid = void 0;
@@ -775,6 +778,9 @@ input#volume_slider {
 }
   /* end styles */
   </style>
+  <link rel="apple-touch-icon" href="apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png">
+  <link rel="shortcut icon" href="apple-touch-icon-144x144.png">
 </head>
 <body>
     <h1>♫♬ Mojolicious radio box</h1>
