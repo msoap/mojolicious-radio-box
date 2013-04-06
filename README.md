@@ -40,7 +40,7 @@ Mac OS X dashboard:
 LINKS
 -----
 
- * [Home page](http://msoap.github.com/mojolicious-radio-box/)
+ * [Home page](http://msoap.github.io/mojolicious-radio-box/)
  * [cmus player](http://cmus.sourceforge.net) ([github](https://github.com/cmus/cmus))
  * [Mojolicious framework](http://mojolicio.us/)
  * [Raspberry Pi](http://www.raspberrypi.org)
