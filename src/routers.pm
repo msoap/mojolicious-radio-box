@@ -2,48 +2,48 @@ get '/' => 'index';
 
 get '/get_info' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_get_info()});
+    return $self->render(json => {status => 'ok', info => cmus_get_info()});
 };
 
 post '/pause' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_pause()});
+    return $self->render(json => {status => 'ok', info => cmus_pause()});
 };
 
 post '/play' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_play()});
+    return $self->render(json => {status => 'ok', info => cmus_play()});
 };
 
 post '/stop' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_stop()});
+    return $self->render(json => {status => 'ok', info => cmus_stop()});
 };
 
 post '/next' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_next()});
+    return $self->render(json => {status => 'ok', info => cmus_next()});
 };
 
 post '/prev' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_prev()});
+    return $self->render(json => {status => 'ok', info => cmus_prev()});
 };
 
 get '/get_radio' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', radio_stations => get_radio_stations()});
+    return $self->render(json => {status => 'ok', radio_stations => get_radio_stations()});
 };
 
 post '/play_radio' => sub {
     my $self = shift;
     my $url = $self->param("url");
-    return $self->render_json({status => 'ok', info => cmus_play_radio($url)});
+    return $self->render(json => {status => 'ok', info => cmus_play_radio($url)});
 };
 
 get '/get_music' => sub {
     my $self = shift;
-    return $self->render_json({status => 'ok', info => cmus_get_music()});
+    return $self->render(json => {status => 'ok', info => cmus_get_music()});
 };
 
 # curl -s -d '' 'http://localhost:8080/set_volume/20'
@@ -52,7 +52,7 @@ post '/set_volume/:volume' => [volume => qr/\d+/] => sub {
 
     my $volume = $self->param("volume");
     cmus_set_volume($volume);
-    return $self->render_json({status => 'ok'});
+    return $self->render(json => {status => 'ok'});
 };
 
 # curl -s http://localhost:8080/help.txt
