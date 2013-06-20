@@ -31,11 +31,11 @@ SCREENSHOTS
 
 iPad:
 
-![iPad](http://msoap.github.com/mojolicious-radio-box/img/rpi_ipad_screenshot.png)
+![iPad](http://msoap.github.io/mojolicious-radio-box/img/rpi_ipad_screenshot.png)
 
 Mac OS X dashboard:
 
-![Mac OS X dashboard](http://msoap.github.com/mojolicious-radio-box/img/rpi_dashboard_screenshot.png)
+![Mac OS X dashboard](http://msoap.github.io/mojolicious-radio-box/img/rpi_dashboard_screenshot.png)
 
 LINKS
 -----
