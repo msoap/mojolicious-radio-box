@@ -18,7 +18,7 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use Data::Dumper;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
@@ -432,12 +432,12 @@ get '/help' => sub {
                  sort {($a->{pattern}->{pattern} || '') cmp ($b->{pattern}->{pattern} || '')}
                  @{$routes->{children}};
 
-    return $self->render_text($result);
+    return $self->render(text => $result);
 };
 
 get '/version' => sub {
     my $self = shift;
-    return $self->render_text($VERSION);
+    return $self->render(text => $VERSION);
 };
 
 app->hook(

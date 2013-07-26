@@ -18,7 +18,7 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use Data::Dumper;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our %OPTIONS = (
     ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
