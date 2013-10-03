@@ -92,8 +92,9 @@ window.App =
         select_input.options.length = 0
 
         select_input.options.add(new Option(' - please select station -', ''))
+        i = 1
         for item in App.radio_stations
-            new_option = new Option(item.title, item.url)
+            new_option = new Option("#{i++}. #{item.title}", item.url)
             if App.info.file? && App.info.file.match(/https?:\/\//) && App.info.file == item.url
                 new_option.selected = true
             select_input.options.add(new_option)
