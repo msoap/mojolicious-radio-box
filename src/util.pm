@@ -44,7 +44,7 @@ sub get_radio_stations {
     my $result = [];
 
     if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
-        for my $playlist_file (glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
+        for my $playlist_file (sort glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
 
             my ($title_from_name, $ext) = $playlist_file =~ m{([^/]+)\.(m3u|pls)$};
             $title_from_name =~ s/_/ /g;
