@@ -76,7 +76,7 @@ sub get_radio_stations {
     my $result = [];
 
     if ($OPTIONS{radio_playlist_dir} && -d -r $OPTIONS{radio_playlist_dir}) {
-        for my $playlist_file (glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
+        for my $playlist_file (sort glob("$OPTIONS{radio_playlist_dir}/*.m3u"), glob("$OPTIONS{radio_playlist_dir}/*.pls")) {
 
             my ($title_from_name, $ext) = $playlist_file =~ m{([^/]+)\.(m3u|pls)$};
             $title_from_name =~ s/_/ /g;
@@ -553,15 +553,16 @@ __DATA__
       }
     },
     render_select_radio: function() {
-      var item, new_option, select_input, _i, _len, _ref, _results;
+      var i, item, new_option, select_input, _i, _len, _ref, _results;
       select_input = $('#radio_stations')[0];
       select_input.options.length = 0;
       select_input.options.add(new Option(' - please select station -', ''));
+      i = 1;
       _ref = App.radio_stations;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        new_option = new Option(item.title, item.url);
+        new_option = new Option("" + (i++) + ". " + item.title, item.url);
         if ((App.info.file != null) && App.info.file.match(/https?:\/\//) && App.info.file === item.url) {
           new_option.selected = true;
         }
