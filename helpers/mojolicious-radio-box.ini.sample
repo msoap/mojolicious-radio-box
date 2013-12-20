@@ -11,6 +11,9 @@ listen_address = http://*:8080
 hypnotoad_workers = 3
 hypnotoad_accept_interval = 0.3
 
+# secret for mojolicious
+secret = HqtGn3rOHgSGRBKRQDfY7Yy82V5A5gMqwAAQg6xIeXQVR1LBQSK2JwtmYAAoKrPW1a7RXKm63Hrq
+
 # PulseAudio settings
 # if sound-card dont autodetect, uncomment this and set your soundcard id
 # pa-default-sink = 0

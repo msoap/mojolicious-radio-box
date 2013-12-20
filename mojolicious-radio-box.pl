@@ -457,7 +457,7 @@ app
             accept_interval => $OPTIONS{hypnotoad_accept_interval},
         }
     )
-    ->secret('KxY0bCQwtVmQa2QdxqX8E0WtmVdpv362NJxofWP')
+    ->secrets([$OPTIONS{secret} || 'Ayf2+mH+dERawZpUvxGMbxQ5bXk+vccLUL1zN0sPu0m3+EitXVPS+6HCZMJn/4zoOkSV/pHM/Aty'])
     ->start(@ARGV ? @ARGV : ("daemon", "--listen=$OPTIONS{listen_address}"));
 
 __DATA__
