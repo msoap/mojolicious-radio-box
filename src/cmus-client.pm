@@ -1,6 +1,6 @@
 =head1 cmus player client
 
-    http://cmus.sourceforge.net
+    https://cmus.github.io
 
 =cut
 

@@ -41,7 +41,7 @@ LINKS
 -----
 
  * [Home page](http://msoap.github.io/mojolicious-radio-box/)
- * [cmus player](http://cmus.sourceforge.net) ([github](https://github.com/cmus/cmus))
+ * [cmus player](https://cmus.github.io) ([github](https://github.com/cmus/cmus))
  * [Mojolicious framework](http://mojolicio.us/)
  * [Raspberry Pi](http://www.raspberrypi.org)
 

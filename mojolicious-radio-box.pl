@@ -124,7 +124,7 @@ sub get_radio_stations {
 # ------------------------------------------------------------------------------
 =head1 cmus player client
 
-    http://cmus.sourceforge.net
+    https://cmus.github.io
 
 =cut
 
@@ -531,10 +531,10 @@ __DATA__
       if (App.info.tag) {
         position = parseInt(App.info.position) > 0 ? " (" + App.format_track_time(parseInt(App.info.position)) + ")" : "";
         if (App.info.stream) {
-          $("#div_info").html("" + App.info.tag.title + "<br>\n<b>" + App.info.stream + position + "</b>");
+          $("#div_info").html(App.info.tag.title + "<br>\n<b>" + App.info.stream + position + "</b>");
         } else if (App.info.tag.artist && App.info.tag.album) {
           duration = parseInt(App.info.duration) > 0 ? " (" + App.format_track_time(parseInt(App.info.duration)) + ")" : "";
-          $("#div_info").html("" + App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + duration + "</b>");
+          $("#div_info").html(App.info.tag.artist + "<br>\n<i>" + App.info.tag.album + "</i><br>\n<b>" + App.info.tag.title + duration + "</b>");
           $("#radio_stations").hide()[0].selectedIndex = 0;
         } else {
           $("#div_info").html("<b>" + App.info.tag.title + position + "</b>");
@@ -553,22 +553,22 @@ __DATA__
       }
     },
     render_select_radio: function() {
-      var i, item, new_option, select_input, _i, _len, _ref, _results;
+      var i, item, j, len, new_option, ref, results, select_input;
       select_input = $('#radio_stations')[0];
       select_input.options.length = 0;
       select_input.options.add(new Option(' - please select station -', ''));
       i = 1;
-      _ref = App.radio_stations;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        new_option = new Option("" + (i++) + ". " + item.title, item.url);
+      ref = App.radio_stations;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        item = ref[j];
+        new_option = new Option((i++) + ". " + item.title, item.url);
         if ((App.info.file != null) && App.info.file.match(/https?:\/\//) && App.info.file === item.url) {
           new_option.selected = true;
         }
-        _results.push(select_input.options.add(new_option));
+        results.push(select_input.options.add(new_option));
       }
-      return _results;
+      return results;
     },
     format_track_time: function(all_seconds) {
       var hours, minutes, result, seconds;
@@ -581,9 +581,9 @@ __DATA__
       if (seconds < 10) {
         seconds = "0" + seconds;
       }
-      result = "" + minutes + ":" + seconds;
+      result = minutes + ":" + seconds;
       if (hours > 0) {
-        result = "" + hours + ":" + result;
+        result = hours + ":" + result;
       }
       return result;
     },
