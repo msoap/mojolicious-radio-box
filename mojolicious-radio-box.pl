@@ -18,14 +18,14 @@ use open qw/:std :utf8/;
 use Mojolicious::Lite;
 use Data::Dumper;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our %OPTIONS = (
-    ini_file => "$ENV{HOME}/.cmus/mojolicious-radio-box.ini",
-    last_track_file => "$ENV{HOME}/.cmus/last_track.tsv",
-    playlist_file => "$ENV{HOME}/.cmus/playlist.pl",
+    ini_file => "$ENV{HOME}/.config/cmus/mojolicious-radio-box.ini",
+    last_track_file => "$ENV{HOME}/.config/cmus/last_track.tsv",
+    playlist_file => "$ENV{HOME}/.config/cmus/playlist.pl",
     listen_address => 'http://*:8080',
-    hypnotoad_workers => 5,
+    hypnotoad_workers => 2,
     hypnotoad_accept_interval => 0.1,
 );
 
